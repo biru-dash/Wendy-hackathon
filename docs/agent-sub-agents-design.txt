@@ -1,0 +1,107 @@
+Root Agent: Orchestrator 🎼
+This agent acts as the project manager or initiator. It doesn't do the research itself but kicks off the entire workflow.
+
+Purpose: To receive a high-level strategic goal from a human analyst and activate the three parallel research agents.
+
+What it "looks for" (Tasks):
+
+The Core Prompt: It waits for a human input, like, "We need to increase breakfast traffic," "Design a new offer for Gen Z app users," or "Find a way to boost loyalty sign-ups."
+
+Activation: It takes this prompt and passes it as the initial context to the three sub-agents (Market Trends, Customer Insights, Competitor Intelligence) to start their analysis.
+
+Sub-Agents (The Research Team)
+These three agents work in parallel to gather the raw intelligence.
+
+1. Market Trends & Deep Research Agent 🌍
+This is the agent from your first image. It looks externally at the broad market and culture.
+
+Purpose: To detect new, emerging promotion styles and cultural narratives.
+
+What it "looks for" (Tasks):
+
+New Offer Mechanics: Scans sources (Reddit, blogs, news) for novel concepts like gamification, surprise rewards, subscriptions, or "dupes" (as specified in your first image).
+
+Emerging Narratives: Summarizes consumer language and sentiment. What words are people using? (e.g., "VIP treatment," "value hacking," "shrinkflation").
+
+Velocity & Novelty: Measures how fast a trend is growing and how unique it is to find what's next rather than what's already mainstream.
+
+Output: A trend_brief[] (e.g., "Meal subscriptions are trending on Reddit, associated by Gen Z with 'VIP treatment.'").
+
+2. Customer Insights Agent 📊
+This agent looks internally at Wendy's own data.
+
+Purpose: To profile which specific customer segments value which offer mechanics.
+
+What it "looks for" (Tasks):
+
+Segment Preferences: Analyzes past sales and loyalty data to see what works. (e.g., "Do Gen Z users redeem 'Free Item' offers more than '$ Off' offers?").
+
+Product Affinities: Identifies which menu items are most popular with the target segment (e.g., "High-frequency users have a 60% attach rate for a Frosty.").
+
+Performance Metrics: Looks at past promotions to see what drove the most profit, traffic, or sign-ups, not just redemptions.
+
+Output: A Customer Profile Brief (e.g., "Our Gen Z segment values 'free item' rewards over discounts and has the highest affinity for Spicy Nuggets and Frostys.").
+
+3. Competitor Intelligence Agent 🕵️
+This agent looks externally at direct rivals.
+
+Purpose: To map the current competitive landscape and identify "whitespace" (opportunities no one is claiming).
+
+What it "looks for" (Tasks):
+
+Competitor Actions: Scans McDonald's, Burger King, etc., for their current national and app-exclusive offers.
+
+Market Saturation: Identifies what mechanics are over-used. (e.g., "The entire market is saturated with 'Buy One, Get One for $1' deals.").
+
+Strategic Gaps (Whitespace): Finds the open lanes. (e.g., "No major competitor is using gamified 'challenges' for their breakfast menu. This is a clear whitespace.").
+
+Output: A Competitive Whitespace Map (e.g., "Market is crowded with simple discounts. Opportunity exists in breakfast-focused gamification or premium subscription tiers.").
+
+Sub-Agent (The Synthesizer)
+4. Offer Design Agent 💡
+This agent is the convergence point. It doesn't do any new research; it synthesizes the findings from the other three agents to create the final output.
+
+Purpose: To synthesize all inputs and generate 2-3 concrete, actionable offer concepts.
+
+What it "looks for" (Tasks):
+
+The "Sweet Spot": It looks for the intersection of all three data streams.
+
+Market Trend: "Gamification is popular."
+
+Customer Insight: "Our target users love Spicy Nuggets."
+
+Competitor Whitespace: "No one is gamifying their core menu."
+
+Concept Generation: Based on this "sweet spot," it designs the actual offers.
+
+Output: 2-3 Final Offer Concepts (e.g., "Concept 1: The Spicy Nugget Quest. A 3-step app challenge to unlock a free 10-piece. Taps into gamification trend, uses a high-affinity product, and is unique in the market.")
+
+1. Social Listener Agent 🗣️
+This agent's job is to analyze unstructured public conversations. Its tools are focused on accessing forums and processing raw language.
+
+Google Search (with site operator): This is the most flexible built-in tool. The agent would be prompted to use it with site: operators to query specific communities mentioned in the original brief (like Reddit).
+
+Example Query: query="Gen Z 'VIP treatment' fast food site:reddit.com/r/fastfood"
+
+Custom reddit_api_tool: For deeper, more structured analysis, you would build a custom tool. This tool would use a Python library (like PRAW) to connect to the Reddit API (which requires a commercial agreement). This allows the agent to pull all comments from a specific thread, find related subreddits, and track user discussions more reliably than a search engine.
+
+NLP Library (e.g., spaCy or Hugging Face Transformers): This wouldn't be a "tool" the agent calls, but rather a component of the agent's internal logic. After the Google Search or reddit_api_tool retrieves the text, the agent's code would use an NLP library to perform sentiment analysis and named entity recognition (NER) to find representative quotes and summarize narratives.
+
+2. Media & Publication Scanner 📰
+This agent's job is to find and extract structured, published content. Its tools are for web discovery and content extraction.
+
+Google Search (standard): This is the primary tool for discovering relevant press articles, food blogs, and trend reports.
+
+Example Query: query="new QSR promotion mechanics 2025" or query="fast food subscription models analysis"
+
+web_scraper_tool (Custom Tool): This is the most critical tool for this agent. After Google Search provides a URL, this agent passes it to the web_scraper_tool. This tool would use a service API (like Firecrawl, ScraperAPI, or Bright Data) to fetch the full, clean, LLM-ready content from the webpage, bypassing blocks and ads. A simpler version could just use Python's requests and BeautifulSoup libraries.
+
+3. Quantitative Trend Analyst 📈
+This agent's job is to measure the velocity and scale of trends. It needs tools that return numbers and graphs, not just text.
+
+google_trends_api_tool (Custom Tool): This is the agent's main tool. Since Google only offers a Trends API in a limited alpha, this tool would likely be built using a third-party provider like SerpApi's Google Trends API or the open-source Python library pytrends. The agent can then get objective data on search interest velocity.
+
+Example Call: tool.get_interest_over_time(keyword="meal subscription", timeframe="today 12-m")
+
+seo_tool_api (Custom Tool): For deeper data, this agent could have a tool that connects to an SEO platform's API (like Semrush or Ahrefs). This would allow it to get hard numbers on monthly search volume, keyword difficulty, and a wider range of related search terms, providing a much richer "signal strength."

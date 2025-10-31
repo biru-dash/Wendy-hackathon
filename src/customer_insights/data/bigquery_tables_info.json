@@ -1,0 +1,973 @@
+{
+  "dataset": "483447458116.wendys_hackathon_data",
+  "tables": {
+    "agent_runs": {
+      "description": null,
+      "created": "2025-10-24 15:03:30.473000+00:00",
+      "modified": "2025-10-24 15:03:30.490000+00:00",
+      "num_rows": 0,
+      "num_bytes": 0,
+      "schema": [
+        {
+          "name": "run_id",
+          "type": "STRING",
+          "mode": "REQUIRED",
+          "description": null
+        },
+        {
+          "name": "user_id",
+          "type": "STRING",
+          "mode": "REQUIRED",
+          "description": null
+        },
+        {
+          "name": "session_id",
+          "type": "STRING",
+          "mode": "REQUIRED",
+          "description": null
+        },
+        {
+          "name": "prompt",
+          "type": "STRING",
+          "mode": "REQUIRED",
+          "description": null
+        },
+        {
+          "name": "agent_name",
+          "type": "STRING",
+          "mode": "REQUIRED",
+          "description": null
+        },
+        {
+          "name": "event_type",
+          "type": "STRING",
+          "mode": "REQUIRED",
+          "description": null
+        },
+        {
+          "name": "event_data",
+          "type": "STRING",
+          "mode": "NULLABLE",
+          "description": null
+        },
+        {
+          "name": "timestamp",
+          "type": "TIMESTAMP",
+          "mode": "REQUIRED",
+          "description": null
+        }
+      ],
+      "sample_data": []
+    },
+    "competitor_intel_raw": {
+      "description": null,
+      "created": "2025-10-10 14:39:49.193000+00:00",
+      "modified": "2025-10-10 14:39:51.482000+00:00",
+      "num_rows": 1000,
+      "num_bytes": 94742,
+      "schema": [
+        {
+          "name": "observation_id",
+          "type": "STRING",
+          "mode": "NULLABLE",
+          "description": null
+        },
+        {
+          "name": "brand",
+          "type": "STRING",
+          "mode": "NULLABLE",
+          "description": null
+        },
+        {
+          "name": "offer_mechanic",
+          "type": "STRING",
+          "mode": "NULLABLE",
+          "description": null
+        },
+        {
+          "name": "duration_days",
+          "type": "INTEGER",
+          "mode": "NULLABLE",
+          "description": null
+        },
+        {
+          "name": "channel",
+          "type": "STRING",
+          "mode": "NULLABLE",
+          "description": null
+        },
+        {
+          "name": "observed_date",
+          "type": "DATE",
+          "mode": "NULLABLE",
+          "description": null
+        }
+      ],
+      "sample_data": [
+        {
+          "observation_id": "2d7fd55c-3851-42de-865d-fe7132dc30d5",
+          "brand": "Chick-fil-A",
+          "offer_mechanic": "BOGO",
+          "duration_days": 7,
+          "channel": "all-channels",
+          "observed_date": "2025-06-09"
+        },
+        {
+          "observation_id": "f1d49d80-2b9a-429f-9cdc-178737fec120",
+          "brand": "Taco Bell",
+          "offer_mechanic": "BOGO",
+          "duration_days": 7,
+          "channel": "all-channels",
+          "observed_date": "2025-05-16"
+        },
+        {
+          "observation_id": "8c42b4d7-f950-46d2-8b5d-5690725fce17",
+          "brand": "McDonald's",
+          "offer_mechanic": "BOGO",
+          "duration_days": 7,
+          "channel": "in-store",
+          "observed_date": "2025-02-15"
+        }
+      ]
+    },
+    "competitor_landscape": {
+      "description": null,
+      "created": "2025-10-24 15:03:29.570000+00:00",
+      "modified": "2025-10-24 15:03:29.587000+00:00",
+      "num_rows": 0,
+      "num_bytes": 0,
+      "schema": [
+        {
+          "name": "competitor_id",
+          "type": "STRING",
+          "mode": "REQUIRED",
+          "description": null
+        },
+        {
+          "name": "brand",
+          "type": "STRING",
+          "mode": "REQUIRED",
+          "description": null
+        },
+        {
+          "name": "mechanic",
+          "type": "STRING",
+          "mode": "REQUIRED",
+          "description": null
+        },
+        {
+          "name": "duration",
+          "type": "STRING",
+          "mode": "NULLABLE",
+          "description": null
+        },
+        {
+          "name": "channel",
+          "type": "STRING",
+          "mode": "NULLABLE",
+          "description": null
+        },
+        {
+          "name": "target_audience",
+          "type": "STRING",
+          "mode": "NULLABLE",
+          "description": null
+        },
+        {
+          "name": "reported_lift",
+          "type": "FLOAT",
+          "mode": "NULLABLE",
+          "description": null
+        },
+        {
+          "name": "frequency",
+          "type": "STRING",
+          "mode": "NULLABLE",
+          "description": null
+        },
+        {
+          "name": "created_at",
+          "type": "TIMESTAMP",
+          "mode": "REQUIRED",
+          "description": null
+        }
+      ],
+      "sample_data": []
+    },
+    "crm_data": {
+      "description": "CRM and loyalty customer visit data",
+      "created": "2025-10-29 14:23:10.812000+00:00",
+      "modified": "2025-10-29 14:23:13.551000+00:00",
+      "num_rows": 37513,
+      "num_bytes": 3034210,
+      "schema": [
+        {
+          "name": "customer_id",
+          "type": "STRING",
+          "mode": "NULLABLE",
+          "description": null
+        },
+        {
+          "name": "segment_id",
+          "type": "STRING",
+          "mode": "NULLABLE",
+          "description": null
+        },
+        {
+          "name": "visit_date",
+          "type": "DATETIME",
+          "mode": "NULLABLE",
+          "description": null
+        },
+        {
+          "name": "spend",
+          "type": "FLOAT",
+          "mode": "NULLABLE",
+          "description": null
+        },
+        {
+          "name": "channel",
+          "type": "STRING",
+          "mode": "NULLABLE",
+          "description": null
+        },
+        {
+          "name": "preferred_time",
+          "type": "STRING",
+          "mode": "NULLABLE",
+          "description": null
+        },
+        {
+          "name": "total_lifetime_visits",
+          "type": "INTEGER",
+          "mode": "NULLABLE",
+          "description": null
+        },
+        {
+          "name": "total_lifetime_spend",
+          "type": "FLOAT",
+          "mode": "NULLABLE",
+          "description": null
+        }
+      ],
+      "sample_data": [
+        {
+          "customer_id": "customer_0002",
+          "segment_id": "convenience-driven",
+          "visit_date": "2025-08-29 01:18:00.085857",
+          "spend": 12.96,
+          "channel": "app",
+          "preferred_time": "lunch",
+          "total_lifetime_visits": 102,
+          "total_lifetime_spend": 1689.12
+        },
+        {
+          "customer_id": "customer_0002",
+          "segment_id": "convenience-driven",
+          "visit_date": "2025-08-21 17:18:00.085857",
+          "spend": 14.81,
+          "channel": "app",
+          "preferred_time": "lunch",
+          "total_lifetime_visits": 84,
+          "total_lifetime_spend": 1615.68
+        },
+        {
+          "customer_id": "customer_0002",
+          "segment_id": "convenience-driven",
+          "visit_date": "2025-09-04 05:18:00.085857",
+          "spend": 9.16,
+          "channel": "app",
+          "preferred_time": "lunch",
+          "total_lifetime_visits": 42,
+          "total_lifetime_spend": 1615.68
+        }
+      ]
+    },
+    "customer_feedback_raw": {
+      "description": null,
+      "created": "2025-10-10 14:39:45.647000+00:00",
+      "modified": "2025-10-10 14:39:47.887000+00:00",
+      "num_rows": 1000,
+      "num_bytes": 159427,
+      "schema": [
+        {
+          "name": "feedback_id",
+          "type": "STRING",
+          "mode": "NULLABLE",
+          "description": null
+        },
+        {
+          "name": "customer_id",
+          "type": "STRING",
+          "mode": "NULLABLE",
+          "description": null
+        },
+        {
+          "name": "feedback_date",
+          "type": "DATETIME",
+          "mode": "NULLABLE",
+          "description": null
+        },
+        {
+          "name": "rating",
+          "type": "INTEGER",
+          "mode": "NULLABLE",
+          "description": null
+        },
+        {
+          "name": "feedback_text",
+          "type": "STRING",
+          "mode": "NULLABLE",
+          "description": null
+        }
+      ],
+      "sample_data": [
+        {
+          "feedback_id": "95b083d2-f30a-4508-961b-958592b722dc",
+          "customer_id": "cust_427",
+          "feedback_date": "2025-10-10 14:14:30.634351",
+          "rating": 1,
+          "feedback_text": "College so real bed raise every form. Involve listen drug claim center occur. Behavior Republican war dinner space season someone."
+        },
+        {
+          "feedback_id": "40c30948-e283-4eaa-81ef-36e7ab300737",
+          "customer_id": "cust_141",
+          "feedback_date": "2025-10-10 14:15:19.448969",
+          "rating": 1,
+          "feedback_text": "Agree almost worry director occur away head. Nature first exist early free marriage friend."
+        },
+        {
+          "feedback_id": "f2cf1f81-96c8-4c58-8ba6-c548b23b1fcc",
+          "customer_id": "cust_110",
+          "feedback_date": "2025-10-10 14:14:43.717086",
+          "rating": 1,
+          "feedback_text": "Seek question letter region check owner him. Around common result occur require nor friend. South technology light arm despite."
+        }
+      ]
+    },
+    "customer_segments": {
+      "description": null,
+      "created": "2025-10-24 15:03:29.226000+00:00",
+      "modified": "2025-10-24 15:03:29.272000+00:00",
+      "num_rows": 0,
+      "num_bytes": 0,
+      "schema": [
+        {
+          "name": "segment_id",
+          "type": "STRING",
+          "mode": "REQUIRED",
+          "description": null
+        },
+        {
+          "name": "description",
+          "type": "STRING",
+          "mode": "REQUIRED",
+          "description": null
+        },
+        {
+          "name": "preferred_mechanics",
+          "type": "STRING",
+          "mode": "REPEATED",
+          "description": null
+        },
+        {
+          "name": "key_messaging_phrases",
+          "type": "STRING",
+          "mode": "REPEATED",
+          "description": null
+        },
+        {
+          "name": "redemption_rate",
+          "type": "FLOAT",
+          "mode": "NULLABLE",
+          "description": null
+        },
+        {
+          "name": "lift_estimate",
+          "type": "FLOAT",
+          "mode": "NULLABLE",
+          "description": null
+        },
+        {
+          "name": "empirical_metrics",
+          "type": "STRING",
+          "mode": "NULLABLE",
+          "description": null
+        },
+        {
+          "name": "created_at",
+          "type": "TIMESTAMP",
+          "mode": "REQUIRED",
+          "description": null
+        }
+      ],
+      "sample_data": []
+    },
+    "customer_transactions_raw": {
+      "description": null,
+      "created": "2025-10-10 14:39:42.429000+00:00",
+      "modified": "2025-10-10 14:39:44.665000+00:00",
+      "num_rows": 2000,
+      "num_bytes": 174249,
+      "schema": [
+        {
+          "name": "transaction_id",
+          "type": "STRING",
+          "mode": "NULLABLE",
+          "description": null
+        },
+        {
+          "name": "customer_id",
+          "type": "STRING",
+          "mode": "NULLABLE",
+          "description": null
+        },
+        {
+          "name": "visit_date",
+          "type": "DATETIME",
+          "mode": "NULLABLE",
+          "description": null
+        },
+        {
+          "name": "total_spend",
+          "type": "FLOAT",
+          "mode": "NULLABLE",
+          "description": null
+        },
+        {
+          "name": "redeemed_offer",
+          "type": "STRING",
+          "mode": "NULLABLE",
+          "description": null
+        },
+        {
+          "name": "channel",
+          "type": "STRING",
+          "mode": "NULLABLE",
+          "description": null
+        }
+      ],
+      "sample_data": [
+        {
+          "transaction_id": "ca098fb8-a504-42f0-bcaf-e0049e0454ae",
+          "customer_id": "cust_100",
+          "visit_date": "2025-10-10 14:18:45.594341",
+          "total_spend": 19.29,
+          "redeemed_offer": "20% Off Mobile Order",
+          "channel": "app"
+        },
+        {
+          "transaction_id": "2ab40a5f-fe59-4e46-8d84-2c3b6615b3c5",
+          "customer_id": "cust_101",
+          "visit_date": "2025-10-10 14:18:05.426216",
+          "total_spend": 15.27,
+          "redeemed_offer": "4 for $4",
+          "channel": "app"
+        },
+        {
+          "transaction_id": "2efa546e-3b0e-4b23-8443-6433302763c2",
+          "customer_id": "cust_105",
+          "visit_date": "2025-10-10 14:16:00.786424",
+          "total_spend": 15.18,
+          "redeemed_offer": "BOGO Dave's Single",
+          "channel": "app"
+        }
+      ]
+    },
+    "feedback_data": {
+      "description": "Customer feedback, reviews, and sentiment data",
+      "created": "2025-10-29 14:23:19.399000+00:00",
+      "modified": "2025-10-29 14:23:21.963000+00:00",
+      "num_rows": 2000,
+      "num_bytes": 381093,
+      "schema": [
+        {
+          "name": "feedback_id",
+          "type": "STRING",
+          "mode": "NULLABLE",
+          "description": null
+        },
+        {
+          "name": "customer_id",
+          "type": "STRING",
+          "mode": "NULLABLE",
+          "description": null
+        },
+        {
+          "name": "segment_id",
+          "type": "STRING",
+          "mode": "NULLABLE",
+          "description": null
+        },
+        {
+          "name": "offer_type",
+          "type": "STRING",
+          "mode": "NULLABLE",
+          "description": null
+        },
+        {
+          "name": "feedback_date",
+          "type": "DATETIME",
+          "mode": "NULLABLE",
+          "description": null
+        },
+        {
+          "name": "review_text",
+          "type": "STRING",
+          "mode": "NULLABLE",
+          "description": null
+        },
+        {
+          "name": "sentiment_score",
+          "type": "FLOAT",
+          "mode": "NULLABLE",
+          "description": null
+        },
+        {
+          "name": "key_phrases",
+          "type": "STRING",
+          "mode": "REPEATED",
+          "description": null
+        },
+        {
+          "name": "channel",
+          "type": "STRING",
+          "mode": "NULLABLE",
+          "description": null
+        },
+        {
+          "name": "source",
+          "type": "STRING",
+          "mode": "NULLABLE",
+          "description": null
+        }
+      ],
+      "sample_data": [
+        {
+          "feedback_id": "feedback_01107",
+          "customer_id": "customer_0678",
+          "segment_id": "convenience-driven",
+          "offer_type": "App Exclusive",
+          "feedback_date": "2025-09-16 20:18:00.306766",
+          "review_text": "I appreciated the app exclusive offer. app makes it simple! The app made it so easy!",
+          "sentiment_score": 0.69,
+          "key_phrases": [
+            "app makes it simple",
+            "quick",
+            "no hassle",
+            "easy to use"
+          ],
+          "channel": "app",
+          "source": "app_review"
+        },
+        {
+          "feedback_id": "feedback_01712",
+          "customer_id": "customer_0285",
+          "segment_id": "loyal-repeater",
+          "offer_type": "App Exclusive",
+          "feedback_date": "2025-09-18 01:18:00.306766",
+          "review_text": "I appreciated the app exclusive offer. consistent quality! The app made it so easy!",
+          "sentiment_score": 0.75,
+          "key_phrases": [
+            "reliable",
+            "consistent quality",
+            "trustworthy"
+          ],
+          "channel": "app",
+          "source": "campaign_feedback"
+        },
+        {
+          "feedback_id": "feedback_00593",
+          "customer_id": "customer_0311",
+          "segment_id": "convenience-driven",
+          "offer_type": "App Exclusive",
+          "feedback_date": "2025-10-25 05:18:00.306766",
+          "review_text": "I appreciated the app exclusive offer. easy to use! The app made it so easy!",
+          "sentiment_score": 0.62,
+          "key_phrases": [
+            "fast",
+            "quick",
+            "no hassle",
+            "easy to use"
+          ],
+          "channel": "app",
+          "source": "social_comment"
+        }
+      ]
+    },
+    "market_trends": {
+      "description": null,
+      "created": "2025-10-24 15:03:28.878000+00:00",
+      "modified": "2025-10-24 15:03:28.944000+00:00",
+      "num_rows": 0,
+      "num_bytes": 0,
+      "schema": [
+        {
+          "name": "trend_id",
+          "type": "STRING",
+          "mode": "REQUIRED",
+          "description": null
+        },
+        {
+          "name": "title",
+          "type": "STRING",
+          "mode": "REQUIRED",
+          "description": null
+        },
+        {
+          "name": "summary",
+          "type": "STRING",
+          "mode": "REQUIRED",
+          "description": null
+        },
+        {
+          "name": "evidence_snippets",
+          "type": "STRING",
+          "mode": "REPEATED",
+          "description": null
+        },
+        {
+          "name": "signal_strength",
+          "type": "STRING",
+          "mode": "REQUIRED",
+          "description": null
+        },
+        {
+          "name": "recommended_directions",
+          "type": "STRING",
+          "mode": "REPEATED",
+          "description": null
+        },
+        {
+          "name": "created_at",
+          "type": "TIMESTAMP",
+          "mode": "REQUIRED",
+          "description": null
+        }
+      ],
+      "sample_data": []
+    },
+    "market_trends_raw": {
+      "description": null,
+      "created": "2025-10-10 14:39:38.408000+00:00",
+      "modified": "2025-10-10 14:39:41.445000+00:00",
+      "num_rows": 1500,
+      "num_bytes": 332182,
+      "schema": [
+        {
+          "name": "source_id",
+          "type": "STRING",
+          "mode": "NULLABLE",
+          "description": null
+        },
+        {
+          "name": "source_type",
+          "type": "STRING",
+          "mode": "NULLABLE",
+          "description": null
+        },
+        {
+          "name": "text_content",
+          "type": "STRING",
+          "mode": "NULLABLE",
+          "description": null
+        },
+        {
+          "name": "publication_date",
+          "type": "DATETIME",
+          "mode": "NULLABLE",
+          "description": null
+        },
+        {
+          "name": "trend_theme",
+          "type": "STRING",
+          "mode": "NULLABLE",
+          "description": null
+        },
+        {
+          "name": "velocity_score",
+          "type": "FLOAT",
+          "mode": "NULLABLE",
+          "description": null
+        }
+      ],
+      "sample_data": [
+        {
+          "source_id": "27269f1f-0559-4dbf-9a65-04191cc2216a",
+          "source_type": "FoodBlog",
+          "text_content": "A monthly subscription for Wendy's that gives you free delivery and one free premium item a week would be a game-changer for my family.",
+          "publication_date": "2025-06-04 12:20:30.590834",
+          "trend_theme": "Subscriptions",
+          "velocity_score": 1.44
+        },
+        {
+          "source_id": "26522ad7-9ab8-4187-b5bb-2cf71b453306",
+          "source_type": "FoodBlog",
+          "text_content": "A monthly subscription for Wendy's that gives you free delivery and one free premium item a week would be a game-changer for my family.",
+          "publication_date": "2025-04-13 04:54:55.839943",
+          "trend_theme": "Subscriptions",
+          "velocity_score": 2.06
+        },
+        {
+          "source_id": "195d43a3-e1cf-4d56-a2c4-cde6b980a371",
+          "source_type": "FoodBlog",
+          "text_content": "A monthly subscription for Wendy's that gives you free delivery and one free premium item a week would be a game-changer for my family.",
+          "publication_date": "2025-05-25 04:42:17.283787",
+          "trend_theme": "Subscriptions",
+          "velocity_score": 4.36
+        }
+      ]
+    },
+    "offer_concepts": {
+      "description": null,
+      "created": "2025-10-24 15:03:30.181000+00:00",
+      "modified": "2025-10-24 15:03:30.231000+00:00",
+      "num_rows": 0,
+      "num_bytes": 0,
+      "schema": [
+        {
+          "name": "concept_id",
+          "type": "STRING",
+          "mode": "REQUIRED",
+          "description": null
+        },
+        {
+          "name": "name",
+          "type": "STRING",
+          "mode": "REQUIRED",
+          "description": null
+        },
+        {
+          "name": "mechanic",
+          "type": "STRING",
+          "mode": "REQUIRED",
+          "description": null
+        },
+        {
+          "name": "channel",
+          "type": "STRING",
+          "mode": "REQUIRED",
+          "description": null
+        },
+        {
+          "name": "duration",
+          "type": "STRING",
+          "mode": "REQUIRED",
+          "description": null
+        },
+        {
+          "name": "target_segment",
+          "type": "STRING",
+          "mode": "REQUIRED",
+          "description": null
+        },
+        {
+          "name": "evidence_map",
+          "type": "STRING",
+          "mode": "REQUIRED",
+          "description": null
+        },
+        {
+          "name": "success_hypothesis",
+          "type": "STRING",
+          "mode": "REQUIRED",
+          "description": null
+        },
+        {
+          "name": "feasibility_score",
+          "type": "FLOAT",
+          "mode": "NULLABLE",
+          "description": null
+        },
+        {
+          "name": "expected_impact",
+          "type": "STRING",
+          "mode": "NULLABLE",
+          "description": null
+        },
+        {
+          "name": "created_at",
+          "type": "TIMESTAMP",
+          "mode": "REQUIRED",
+          "description": null
+        }
+      ],
+      "sample_data": []
+    },
+    "redemption_logs": {
+      "description": "Redemption logs and offer history",
+      "created": "2025-10-29 14:23:14.672000+00:00",
+      "modified": "2025-10-29 14:23:17.023000+00:00",
+      "num_rows": 5000,
+      "num_bytes": 617317,
+      "schema": [
+        {
+          "name": "redemption_id",
+          "type": "STRING",
+          "mode": "NULLABLE",
+          "description": null
+        },
+        {
+          "name": "customer_id",
+          "type": "STRING",
+          "mode": "NULLABLE",
+          "description": null
+        },
+        {
+          "name": "segment_id",
+          "type": "STRING",
+          "mode": "NULLABLE",
+          "description": null
+        },
+        {
+          "name": "offer_type",
+          "type": "STRING",
+          "mode": "NULLABLE",
+          "description": null
+        },
+        {
+          "name": "redemption_date",
+          "type": "DATETIME",
+          "mode": "NULLABLE",
+          "description": null
+        },
+        {
+          "name": "channel",
+          "type": "STRING",
+          "mode": "NULLABLE",
+          "description": null
+        },
+        {
+          "name": "is_time_boxed",
+          "type": "BOOLEAN",
+          "mode": "NULLABLE",
+          "description": null
+        },
+        {
+          "name": "is_app_exclusive",
+          "type": "BOOLEAN",
+          "mode": "NULLABLE",
+          "description": null
+        },
+        {
+          "name": "lift_multiplier",
+          "type": "FLOAT",
+          "mode": "NULLABLE",
+          "description": null
+        },
+        {
+          "name": "redemption_value",
+          "type": "FLOAT",
+          "mode": "NULLABLE",
+          "description": null
+        },
+        {
+          "name": "month",
+          "type": "STRING",
+          "mode": "NULLABLE",
+          "description": null
+        },
+        {
+          "name": "day_of_week",
+          "type": "STRING",
+          "mode": "NULLABLE",
+          "description": null
+        },
+        {
+          "name": "hour",
+          "type": "INTEGER",
+          "mode": "NULLABLE",
+          "description": null
+        }
+      ],
+      "sample_data": [
+        {
+          "redemption_id": "redemption_02475",
+          "customer_id": "customer_0131",
+          "segment_id": "weekend-splurger",
+          "offer_type": "App Exclusive",
+          "redemption_date": "2025-05-02 20:18:00.260336",
+          "channel": "app",
+          "is_time_boxed": false,
+          "is_app_exclusive": true,
+          "lift_multiplier": 1.65,
+          "redemption_value": 10.77,
+          "month": "2025-05",
+          "day_of_week": "Friday",
+          "hour": 20
+        },
+        {
+          "redemption_id": "redemption_03379",
+          "customer_id": "customer_0212",
+          "segment_id": "convenience-driven",
+          "offer_type": "App Exclusive",
+          "redemption_date": "2025-05-02 21:18:00.260336",
+          "channel": "app",
+          "is_time_boxed": false,
+          "is_app_exclusive": true,
+          "lift_multiplier": 2.02,
+          "redemption_value": 6.43,
+          "month": "2025-05",
+          "day_of_week": "Friday",
+          "hour": 21
+        },
+        {
+          "redemption_id": "redemption_00954",
+          "customer_id": "customer_0429",
+          "segment_id": "weekend-splurger",
+          "offer_type": "App Exclusive",
+          "redemption_date": "2025-05-02 23:18:00.260336",
+          "channel": "in-store",
+          "is_time_boxed": false,
+          "is_app_exclusive": true,
+          "lift_multiplier": 1.49,
+          "redemption_value": 5.38,
+          "month": "2025-05",
+          "day_of_week": "Friday",
+          "hour": 23
+        }
+      ]
+    },
+    "whitespace_opportunities": {
+      "description": null,
+      "created": "2025-10-24 15:03:29.865000+00:00",
+      "modified": "2025-10-24 15:03:29.886000+00:00",
+      "num_rows": 0,
+      "num_bytes": 0,
+      "schema": [
+        {
+          "name": "opportunity_id",
+          "type": "STRING",
+          "mode": "REQUIRED",
+          "description": null
+        },
+        {
+          "name": "statement",
+          "type": "STRING",
+          "mode": "REQUIRED",
+          "description": null
+        },
+        {
+          "name": "rationale",
+          "type": "STRING",
+          "mode": "REQUIRED",
+          "description": null
+        },
+        {
+          "name": "potential_impact",
+          "type": "STRING",
+          "mode": "NULLABLE",
+          "description": null
+        },
+        {
+          "name": "created_at",
+          "type": "TIMESTAMP",
+          "mode": "REQUIRED",
+          "description": null
+        }
+      ],
+      "sample_data": []
+    }
+  },
+  "total_tables": 13
+}

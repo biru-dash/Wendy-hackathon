@@ -1,0 +1,191 @@
+AI Agents Hackathon @ Wendy’s
+Serving fresh ideas with a side of AI
+01-10-2025
+Biru Dash
+Confidential
+
+Wendy's Hackathon: Agentic AI for Offer Innovation
+Reimagine how Wendy’s designs promotional offers using a team of AI agents that sense market signals, learn from the past, and propose data-driven offer ideas.
+Theme
+Move beyond guesswork and static analysis.Build an agent mesh that continuously gathers, reasons, and synthesizes signals from: customers, competitors, and market trends.
+
+Objectives: 
+Design a multi-agent system that collaborates to propose 3 innovative promotional offers for Wendy’s.
+Each idea must be grounded in: customer preferences, historical learnings, and competitive signals.
+No heavy forecasting/pricing required — focus on signal-driven design and rationale.
+
+Outcome 
+Fresh, evidence-backed offer ideas showcasing the capabilities of building a multi-agent system leveraging GCP technologies.
+
+
+
+
+
+
+
+
+Agent Mesh Overview
+Demonstrate a multi-agent interaction within the Gemini + GCP ecosystem
+
+
+Objective
+Agents we will use today
+Plan
+Market Trends & Deep Research
+Customer Insights
+Competitor Intelligence
+Offer Design
+Setup & Brief
+Build & Extend
+Integrate
+Demo
+Services we will use today
+Agent Development
+Data Layer
+Agent orchestration & communication
+Context Access
+Front-end
+
+Market Trends & Deep Research
+An agent to identify “What’s changing out there?"
+ 
+Agent Description
+Purpose
+Continuously scan external channels to uncover emerging behaviors, conversations, and sentiments around fast-food offers, deals, and promotions — providing the forward-looking context teams need to ideate.
+Tasks
+Detect new offer mechanics and rising themes (e.g., gamification, subscriptions, surprise rewards).
+Measure velocity and novelty (how fast a trend is growing and how unique it is).
+Summarize consumer language and narratives around value and perception.
+Pull representative quotes or links for traceability.
+
+Inputs
+Public social data (Reddit threads)
+Press articles, food blogs, trend reports, Google Search trends
+
+Outputs
+trend_briefs[] - small structured artifacts containing: title, short summary, evidence snippets, signal strength (e.g., velocity), and recommended directions to explore.
+
+Example output
+ “Meal subscription offers are trending on Reddit (+180% mentions in 4 weeks), with Gen Z associating them with ‘VIP treatment.’”
+
+
+Customer Insights
+An agent to identify “What does our audience respond to?"
+ 
+Agent Description
+Purpose
+Understand what customers value in offers by analyzing behavioral signals and historical sentiment to create actionable segment-level preferences.
+Tasks
+Segment customers by sensitivity and preferences (discount hunters, loyal repeaters, convenience-driven).
+Calculate redemption patterns, uplift signals, and time/channel dependencies (e.g., app-only lift).
+Extract sentiment drivers and messaging cues from feedback.
+Highlight shifting behaviors (e.g., growing app-first redemptions).
+
+
+Inputs
+Loyalty and CRM data (visits, spend, redemptions)
+Redemption logs and offer history
+Past campaign feedback, reviews, and social comments (synthetic data allowed)
+
+Outputs
+customer_insights[] - structured profiles for segments: segment_id, description, preferred mechanics, key messaging phrases, empirical metrics (redemption_rate, lift estimates).
+
+Example output
+ “Value-driven weekday lunch buyers redeem BOGO offers 2.3× more often if they are time-boxed and app-exclusive.”
+
+
+Competitor Intelligence
+An agent to identify “What are others doing?"
+ 
+Agent Description
+Purpose
+Track, summarize, and contextualize competitor promotions to reveal opportunities, gaps, and inspiration for differentiated offers.
+Tasks
+Build a structured catalog of competitor promotions (mechanic, duration, channel, target audience).
+Identify novel tactics and measure frequency/adoption across competitors.
+Surface whitespace opportunities where Wendy’s is under-indexed.
+
+
+Inputs
+Public competitor sources (websites, press releases, social posts)
+Loyalty program mechanics and observed campaign mechanics
+Any third-party reporting or benchmark metrics (if available)
+
+Outputs
+competitive_landscape[] - rows of competitor mechanics with metadata (brand, mechanic, duration, reported lift if known).
+whitespace_opportunities[] — targeted opportunity statements with rationale.
+
+Example output
+“McDonald’s launched a weekly gamified app challenge driving 28% lift in engagement — Wendy’s has no equivalent mechanic.”
+
+
+Offer Design
+An agent to identify “What should Wendy’s launch next?"
+ 
+Agent Description
+Purpose
+Synthesize trend, customer, and competitor signals into concrete, evidence-backed offer concepts that are brand-aligned and actionable.
+Tasks
+Combine signals to generate candidate offer mechanics and concepts.
+Define offer structure: mechanic, channel, duration, target segment, and success metrics.
+Provide concise rationale and cite which inputs supported each design decision.
+Prioritize concepts by feasibility and expected impact.
+
+
+Inputs
+Trend_briefs[] from Market Trends & Deep Research agent.
+Customer_insights[] from Customer Insights agent 
+competitive_landscape[] and whitespace_opportunities[] from Competitor Intelligence agent. 
+
+Outputs
+offer_concepts[] - fully described offers (name, mechanic, channel, duration, target, evidence map linking to inputs, and success hypotheses).
+
+Example output
+Name: “Wendy’s Streak Week” — Daily app-only challenges with growing rewards. Why: Aligns with Gen Z gamification trend (Market Trends & Deep Research agent), leverages app-first audience (Customer Insights agent), and fills a competitive gap (Competitor Intelligence agent).
+
+
+Agentic Flow
+Offer Design
+Market Trends & Deep Research Agent
+Customer Insights Agent
+Competitor Intelligence Agent
+Detects new promotion styles and narratives.
+Profiles which segments value which mechanics.
+Maps the landscape and surfaces whitespace.
+Synthesizes and outputs 2–3 offer concepts.
+Orchestrator
+
+Judging Criteria
+S:Signal Quality & Depth (30%) - Is the idea backed by clear, traceable evidence?
+O:Offer Creativity (30%) - Is the offer original and differentiated?
+A: Agent Collaboration (25%) - Do agents hand-off cleanly and build on each other’s work?
+C: Clarity & Storytelling (15%) - Is the pitch/demo concise and easy to understand
+
+
+Judging scale: 0 (lowest) - 5 (highest)
+Total score = (S x 0.3) +  (O x 0.3) + (A x 0.25) + (C x 0.15)   
+
+
+
+Hackathon Facilitators
+Title
+Name
+Profile Summary
+Title
+Name
+Profile Summary
+Title
+Name
+Profile Summary
+Title
+Name
+Profile Summary
+Title
+Name
+Profile Summary
+Let us know if you have any questions!
+To be updated
+Finally, we'll introduce our hackathon facilitators.. We encourage you to ask any questions you may have.
+
+
+Thank You
