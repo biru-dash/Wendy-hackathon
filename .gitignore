@@ -64,6 +64,9 @@ scripts/test_adk_endpoint.py
 docs/agent_architecture_diagram.mmd
 docs/agent_architecture_diagram_simple.mmd
 
+# Archive folder (keep locally, don't commit)
+archive/
+
 # Keep these for participants (DO NOT IGNORE):
 # docs/hackathon_agenda.md - Main hackathon agenda
 # README.md - Main project README
