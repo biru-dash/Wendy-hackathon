@@ -4,73 +4,90 @@ Multi-agent AI system for generating data-driven promotional offers at Wendy's. 
 
 ## Table of Contents
 
-- [Multi-Agent System Overview](#multi-agent-system-overview)
-- [Project Structure](#project-structure)
 - [Getting Started](#getting-started)
+- [Project Structure](#project-structure)
+- [Multi-Agent System Overview](#multi-agent-system-overview)
 - [System Architecture](#system-architecture)
 - [Key Files](#key-files)
 
-## Multi-Agent System Overview
+## Getting Started
 
-The system consists of specialized agent teams working together:
+### Prerequisites
 
-### 1. Market Trends Analyst
+- Python 3.10+
+- Google Cloud SDK (`gcloud`) installed and authenticated
+- Access to `gemini-copilot-testing` Google Cloud project
+- Git installed
 
-**Function**: Research market trends and consumer behaviors using web search
+### Clone Repository
 
-**Structure**:
-- **Root Agent**: `MarketTrendsAnalystRoot` (SequentialAgent)
-- **Sub-Agents**:
-  1. **Data Collection Agent** - Uses Google Search to find URLs and trend data
-  2. **Research Synthesis Agent** - Reads URLs, extracts insights, synthesizes trend briefs
+Clone the repository to your local machine:
 
-**Workflow**:
-```
-Input Query → Data Collection (finds URLs) → Research Synthesis (analyzes content) → Trend Briefs
-```
-
-### 2. Customer Insights
-
-**Function**: Analyze customer behavioral data from BigQuery
-
-**Structure**:
-- **Root Agent**: `CustomerInsightsManagerAgent` (ParallelAgent)
-- **Sub-Agents**:
-  1. **Behavioral Analysis Agent** - Analyzes numerical data (redemptions, visits, spend)
-  2. **Sentiment Analysis Agent** - Analyzes text feedback (reviews, comments)
-  3. **Profile Synthesizer Agent** - Combines quantitative and qualitative insights
-
-**Workflow**:
-```
-Input Query → Behavioral Analysis (parallel) → Profile Synthesizer → Customer Profiles
-              Sentiment Analysis (parallel)
+```bash
+git clone <repository-url>
+cd Wendy-hackathon
 ```
 
-### 3. Offer Design
+Replace `<repository-url>` with the actual repository URL provided by organizers.
 
-**Function**: Synthesizes research into actionable offer concepts
+### Setup Instructions
 
-**Structure**:
-- **Root Agent**: `SimplifiedOfferDesignAgent` (LlmAgent)
-- **Input**: Market trends, customer insights
-- **Output**: 3 prioritized offer concepts
+#### Mac/Linux
 
-### 4. Marketing Orchestrator (Root Agent)
+```bash
+# Create virtual environment
+python3 -m venv venv
 
-**Function**: Coordinates all teams in sequence
+# Activate virtual environment
+source venv/bin/activate
 
-**Workflow**:
+# Install dependencies
+pip install google-adk google-cloud-aiplatform google-cloud-bigquery
+
+# Authenticate with Google Cloud
+gcloud auth application-default login
+
+# Set Google Cloud project
+gcloud config set project gemini-copilot-testing
+
+# Launch ADK Web Server
+adk web src
 ```
-User Query
-  ↓
-Step 1: Market Trends Analyst → trend_briefs[]
-  ↓
-Step 2: Customer Insights → customer_insights, segment_profiles
-  ↓
-Step 3: Offer Design → 3 prioritized offer_concepts[] (final output)
+
+#### Windows
+
+```powershell
+# Create virtual environment
+python -m venv venv
+
+# Activate virtual environment
+.\venv\Scripts\activate
+
+# Install dependencies
+pip install google-adk google-cloud-aiplatform google-cloud-bigquery
+
+# Authenticate with Google Cloud
+gcloud auth application-default login
+
+# Set Google Cloud project
+gcloud config set project gemini-copilot-testing
+
+# Launch ADK Web Server
+adk web src
 ```
 
-**Note**: Competitor Intelligence is commented out by default. See hackathon agenda for advanced path.
+### Access ADK Web Interface
+
+1. Open browser to `http://localhost:8000`
+2. Select "marketing_orchestrator" from agent dropdown menu
+3. Enter your query in the chat interface
+
+**Example Query**: "Develop three innovative offers to increase breakfast traffic among Gen Z customers during Q1 (January-March) breakfast hours (6am-11am)"
+
+### Next Steps
+
+For complete hackathon instructions, testing exercises, and modification guidelines, see:
+- **[Hackathon Agenda](docs/hackathon_agenda.md)** - Complete guide with system overview, testing exercises, and modification tasks
 
 ## Project Structure
 
@@ -134,78 +151,67 @@ Wendy-hackathon/
 └── README.md                    # This file
 ```
 
-## Getting Started
+## Multi-Agent System Overview
 
-### Prerequisites
+The system consists of specialized agent teams working together:
 
-- Python 3.10+
-- Google Cloud SDK (`gcloud`) installed and authenticated
-- Access to `gemini-copilot-testing` Google Cloud project
+### 1. Market Trends Analyst
 
-### Setup Instructions
+**Function**: Research market trends and consumer behaviors using web search
 
-#### Mac/Linux
+**Structure**:
+- **Root Agent**: `MarketTrendsAnalystRoot` (SequentialAgent)
+- **Sub-Agents**:
+  1. **Data Collection Agent** - Uses Google Search to find URLs and trend data
+  2. **Research Synthesis Agent** - Reads URLs, extracts insights, synthesizes trend briefs
 
-```bash
-# Navigate to project directory
-cd wendy-hack-sprint
-
-# Create virtual environment
-python3 -m venv venv
-
-# Activate virtual environment
-source venv/bin/activate
-
-# Install dependencies
-pip install google-adk google-cloud-aiplatform google-cloud-bigquery
-
-# Authenticate with Google Cloud
-gcloud auth application-default login
-
-# Set Google Cloud project
-gcloud config set project gemini-copilot-testing
-
-# Launch ADK Web Server
-adk web src
+**Workflow**:
+```
+Input Query → Data Collection (finds URLs) → Research Synthesis (analyzes content) → Trend Briefs
 ```
 
-#### Windows
+### 2. Customer Insights
 
-```powershell
-# Navigate to project directory
-cd wendy-hack-sprint
+**Function**: Analyze customer behavioral data from BigQuery
 
-# Create virtual environment
-python -m venv venv
+**Structure**:
+- **Root Agent**: `CustomerInsightsManagerAgent` (ParallelAgent)
+- **Sub-Agents**:
+  1. **Behavioral Analysis Agent** - Analyzes numerical data (redemptions, visits, spend)
+  2. **Sentiment Analysis Agent** - Analyzes text feedback (reviews, comments)
+  3. **Profile Synthesizer Agent** - Combines quantitative and qualitative insights
 
-# Activate virtual environment
-.\venv\Scripts\activate
-
-# Install dependencies
-pip install google-adk google-cloud-aiplatform google-cloud-bigquery
-
-# Authenticate with Google Cloud
-gcloud auth application-default login
-
-# Set Google Cloud project
-gcloud config set project gemini-copilot-testing
-
-# Launch ADK Web Server
-adk web src
+**Workflow**:
+```
+Input Query → Behavioral Analysis (parallel) → Profile Synthesizer → Customer Profiles
+              Sentiment Analysis (parallel)
 ```
 
-### Access ADK Web Interface
+### 3. Offer Design
 
-1. Open browser to `http://localhost:8000`
-2. Select "marketing_orchestrator" from agent dropdown menu
-3. Enter your query in the chat interface
+**Function**: Synthesizes research into actionable offer concepts
 
-**Example Query**: "Develop three innovative offers to increase breakfast traffic among Gen Z customers during Q1 (January-March) breakfast hours (6am-11am)"
+**Structure**:
+- **Root Agent**: `SimplifiedOfferDesignAgent` (LlmAgent)
+- **Input**: Market trends, customer insights
+- **Output**: 3 prioritized offer concepts
 
-### Next Steps
+### 4. Marketing Orchestrator (Root Agent)
 
-For complete hackathon instructions, testing exercises, and modification guidelines, see:
-- **[Hackathon Agenda](docs/hackathon_agenda.md)** - Complete guide with system overview, testing exercises, and modification tasks
+**Function**: Coordinates all teams in sequence
+
+**Workflow**:
+```
+User Query
+  ↓
+Step 1: Market Trends Analyst → trend_briefs[]
+  ↓
+Step 2: Customer Insights → customer_insights, segment_profiles
+  ↓
+Step 3: Offer Design → 3 prioritized offer_concepts[] (final output)
+```
+
+**Note**: Competitor Intelligence is commented out by default. See hackathon agenda for advanced path.
 
 ## System Architecture
 

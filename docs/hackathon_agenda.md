@@ -42,30 +42,62 @@ Participants will modify and enhance Wendy's multi-agent AI system by updating a
 - Python 3.10+
 - Google Cloud SDK (`gcloud`) installed and authenticated
 - Access to `gemini-copilot-testing` Google Cloud project
+- Git installed
+
+### Clone Repository
+
+Clone the repository to your local machine:
+
+```bash
+git clone <repository-url>
+cd Wendy-hackathon
+```
+
+Replace `<repository-url>` with the actual repository URL provided by organizers.
 
 ### Environment Setup
 
 #### Mac/Linux
 
 ```bash
-cd wendy-hack-sprint
+# Create virtual environment
 python3 -m venv venv
+
+# Activate virtual environment
 source venv/bin/activate
+
+# Install dependencies
 pip install google-adk google-cloud-aiplatform google-cloud-bigquery
+
+# Authenticate with Google Cloud
 gcloud auth application-default login
+
+# Set Google Cloud project
 gcloud config set project gemini-copilot-testing
+
+# Launch ADK Web Server
 adk web src
 ```
 
 #### Windows
 
 ```powershell
-cd wendy-hack-sprint
+# Create virtual environment
 python -m venv venv
+
+# Activate virtual environment
 .\venv\Scripts\activate
+
+# Install dependencies
 pip install google-adk google-cloud-aiplatform google-cloud-bigquery
+
+# Authenticate with Google Cloud
 gcloud auth application-default login
+
+# Set Google Cloud project
 gcloud config set project gemini-copilot-testing
+
+# Launch ADK Web Server
 adk web src
 ```
 
