@@ -227,7 +227,7 @@ datasets = list(client.list_datasets())
 ### ✅ ADK Access
 ```bash
 adk --version  # Should show ADK version
-adk web marketing_orchestrator  # Should start web server
+adk web src  # Should start web server (then select "marketing_orchestrator" from dropdown)
 ```
 
 ## 10. Troubleshooting Access Issues
@@ -285,6 +285,7 @@ Once all requirements are met, you can run:
 ```bash
 cd C:\Users\birup\Documents\wendy-hack-sprint
 .\venv\Scripts\activate
-adk web marketing_orchestrator
+adk web src
+# Then select "marketing_orchestrator" from the dropdown in the web interface
 ```
 

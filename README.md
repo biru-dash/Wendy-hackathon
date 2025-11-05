@@ -113,12 +113,14 @@ This is the most stable and straightforward way to run the multi-agent system. I
     - Make sure your virtual environment is activated.
     - Run the following command from the project root:
       ```bash
-      adk web src/marketing_orchestrator
+      adk web src
       ```
     - This will start a local web server, typically at `http://localhost:8000`.
+    - **Note:** Run `adk web src` (not `src/marketing_orchestrator`) so that ADK correctly identifies all agents. You'll then select "marketing_orchestrator" from the dropdown in the web interface.
 
 2.  **Interact with the Agent:**
     - Open the provided URL in your browser.
+    - Select "marketing_orchestrator" from the agent dropdown menu.
     - In the chat interface, enter your request.
     - **Example Prompt:** `Develop three innovative, app-exclusive offers to increase breakfast traffic among Gen Z customers. Focus on trending flavors and value.`
 

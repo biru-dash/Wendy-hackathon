@@ -89,7 +89,7 @@ MarketingOrchestratorAgent (Root SequentialAgent)
 ```bash
 cd C:\Users\birup\Documents\wendy-hack-sprint
 .\venv\Scripts\activate
-adk web marketing_orchestrator
+adk web src
 ```
 
 **Example User Prompts**:

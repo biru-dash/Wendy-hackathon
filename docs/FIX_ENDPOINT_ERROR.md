@@ -61,7 +61,8 @@ If the API server doesn't work, you can use the web server and modify the UI to 
 ```powershell
 # Instead of: adk api_server marketing_orchestrator
 # Use:
-adk web marketing_orchestrator
+adk web src
+# Then select "marketing_orchestrator" from the dropdown in the web interface
 ```
 
 Then update the endpoint in `hackathon_ui.py` to match the web server format.
