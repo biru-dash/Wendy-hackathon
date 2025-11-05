@@ -64,14 +64,14 @@ Rank the top 3-5 whitespace opportunities by:
 - Implementation feasibility
 - Competitive advantage potential
 
-Example Output Format:
-WHITESPACE_OPPORTUNITIES:
-1. Opportunity: Gamified App Challenges
-   - Competitor Example: McDonald's - Weekly gamified app challenge with achievement badges
-   - Performance: 28% lift in app engagement, increased retention
-   - Gap: Wendy's has no gamified mechanic in its loyalty program
-   - Strategic Value: Gamification drives daily engagement and habit formation
-   - Recommendation: Implement weekly app challenges with unlockable rewards tied to visits
+**Hackathon Challenge**: 
+- Make instructions specific to the fixed goal (Gen Z breakfast in Q1)
+- Enhance whitespace identification to focus on breakfast-specific opportunities
+- Prioritize opportunities by potential impact for Gen Z breakfast segment
+- Quantify opportunity size (estimated Gen Z breakfast customer base, Q1 market opportunity)
+- Include competitive advantage analysis for breakfast daypart
+- Focus on high-performing breakfast mechanics with proven metrics
+- Consider Q1 seasonal factors and Gen Z breakfast preferences
 
 Key Principles:
 - Be specific and evidence-based (reference competitor examples)

@@ -27,34 +27,20 @@ Your Research Process:
 3. Build a structured profile for this ONE competitor.
 
 Output Format:
-Provide a structured profile in this exact format:
+Provide a structured profile covering:
+- Brand information (name, website, app)
+- Promotional strategy (recent campaigns, offer types, mechanics, duration, channels)
+- Loyalty program details (if applicable)
+- Target audience segments and channel preferences
+- Performance metrics (if available)
+- Notable innovations
 
-COMPETITOR_PROFILE:
-Brand: [Competitor Name]
-Website: [URL]
-App: [App Name]
-
-PROMOTIONAL_STRATEGY:
-- Recent Campaigns: [List of 2-3 recent campaigns]
-- Offer Types: [BOGO, Discounts, Time-Boxed, App Exclusive, Gamification, etc.]
-- Mechanics: [Specific mechanics used - e.g., "weekly app challenge", "referral bonus"]
-- Duration: [Typical campaign length]
-- Channels: [app, web, in-store, social]
-
-LOYALTY_PROGRAM:
-- Program Name: [Name if applicable]
-- Structure: [Points system, tiered, subscription, etc.]
-- Key Features: [What makes it unique]
-
-TARGET_AUDIENCE:
-- Primary Segments: [Who they target]
-- Channel Preferences: [Where they engage]
-
-PERFORMANCE_METRICS (if found):
-- [Any mentioned lift, engagement, or conversion metrics]
-
-NOTABLE_INNOVATIONS:
-- [Any unique or standout promotional mechanics]
+**Hackathon Challenge**: 
+- Make instructions specific to the fixed goal (Gen Z breakfast in Q1)
+- Enhance analysis to focus on breakfast-specific competitor strategies
+- Include: breakfast pricing, morning promotions, breakfast digital/delivery initiatives
+- Consider: how competitors target Gen Z for breakfast, Q1 seasonal breakfast campaigns
+- Include specific examples with metrics when available
 
 Your output will be compiled with other competitor profiles to create the competitive landscape.
 

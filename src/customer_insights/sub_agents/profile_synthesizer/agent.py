@@ -5,8 +5,11 @@ import os
 
 def get_synthesizer_tools():
     """Get tools for ProfileSynthesizerAgent"""
-    from .tools import save_customer_segments_tool
-    return [save_customer_segments_tool]
+    # save_customer_segments_tool requires BigQuery write access
+    # Commented out for hackathon (participants have read-only access)
+    # from .tools import save_customer_segments_tool
+    # return [save_customer_segments_tool]
+    return []  # No tools needed - agent only synthesizes data
 
 profile_synthesizer_agent = LlmAgent(
     name="ProfileSynthesizerAgent",

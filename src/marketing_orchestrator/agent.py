@@ -26,7 +26,8 @@ from google.adk.agents.sequential_agent import SequentialAgent
 # Competitor Intelligence, and Offer Design teams.
 from src.market_trends_analyst.agent import market_trends_analyst_root_agent
 from src.customer_insights.agent import customer_insights_manager_agent
-from src.competitor_intelligence.agent import competitor_intel_manager_agent
+# Competitor Intelligence is commented out for hackathon - uncomment for advanced path
+# from src.competitor_intelligence.agent import competitor_intel_manager_agent
 from src.offer_design.sub_agents.simplified_offer_design.agent import (
     simplified_offer_design_agent,
 )
@@ -39,7 +40,7 @@ marketing_orchestrator_agent = SequentialAgent(
     sub_agents=[
         market_trends_analyst_root_agent,
         customer_insights_manager_agent,
-        competitor_intel_manager_agent,
+        # competitor_intel_manager_agent,  # Commented out for hackathon - uncomment for advanced path
         simplified_offer_design_agent,
     ],
     description=(

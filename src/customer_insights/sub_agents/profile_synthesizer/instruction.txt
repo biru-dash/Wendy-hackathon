@@ -62,11 +62,8 @@ Generate a structured JSON object containing `customer_insights[]` array:
 }
 ```
 
-**Optional: Save Results**
-After generating the customer_insights[], you can optionally use the `save_customer_segments_tool` to persist the results to BigQuery for later retrieval:
-- This stores the insights in the `customer_segments` table
-- Other agents can reference these saved segments
-- Use this when you want to build a library of segment profiles
+**Note: Save Tool Not Available**
+The `save_customer_segments_tool` is not available (read-only BigQuery access). Your output will be passed directly to the next agent in the workflow.
 
 **Example of Good Synthesis:**
 Input: 
