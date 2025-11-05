@@ -1,201 +1,278 @@
-# Wendy's AI Agents Hackathon: Marketing Orchestrator
+# Wendy's AI Agents Hackathon
 
-Welcome, participants! This project is a multi-agent system designed to revolutionize marketing at Wendy's by generating novel, data-driven promotional offers. You will be working with a team of AI agents that collaborate to research market trends, analyze customer data, and design compelling new offers.
-
-This guide will walk you through setting up the project, understanding its components, and starting your journey to build the future of fast-food marketing.
+Multi-agent AI system for generating data-driven promotional offers at Wendy's. This system uses specialized AI agents that collaborate to research market trends, analyze customer data, and design offer concepts.
 
 ## Table of Contents
 
-- [Project Overview](#project-overview)
-- [File Structure](#file-structure)
-- [Part 1: Quick Start with ADK Web (Recommended)](#part-1-quick-start-with-adk-web-recommended)
-  - [Prerequisites](#prerequisites)
-  - [Setup Instructions](#setup-instructions)
-  - [Running the System](#running-the-system)
-- [Part 2: Using the Streamlit UI (Advanced)](#part-2-using-the-streamlit-ui-advanced)
-  - [Overview](#overview)
-  - [Setup and Running](#setup-and-running)
-- [How the Multi-Agent System Works](#how-the-multi-agent-system-works)
-- [Your Mission: What to Modify](#your-mission-what-to-modify)
-- [Key Files to Explore](#key-files-to-explore)
+- [Multi-Agent System Overview](#multi-agent-system-overview)
+- [Project Structure](#project-structure)
+- [Getting Started](#getting-started)
+- [System Architecture](#system-architecture)
+- [Key Files](#key-files)
 
----
+## Multi-Agent System Overview
 
-## Project Overview
+The system consists of specialized agent teams working together:
 
-The **Marketing Orchestrator** is the root agent that manages a sophisticated workflow. It coordinates three specialized sub-agent teams:
+### 1. Market Trends Analyst
 
-1.  **Market Trends Analyst:** Scans the internet for the latest trends in the fast-food industry, focusing on competitor activities and consumer behavior.
-2.  **Customer Insights Agent:** Dives into Wendy's internal (mock) BigQuery database to analyze customer behavior, sentiment, and profile data.
-3.  **Competitor Intelligence Agent:** Gathers information on promotions and strategies from Wendy's key competitors.
+**Function**: Research market trends and consumer behaviors using web search
 
-Once the research is complete, the findings are passed to the **Offer Design Agent**, which synthesizes the information and generates creative, data-backed offer concepts.
+**Structure**:
+- **Root Agent**: `MarketTrendsAnalystRoot` (SequentialAgent)
+- **Sub-Agents**:
+  1. **Data Collection Agent** - Uses Google Search to find URLs and trend data
+  2. **Research Synthesis Agent** - Reads URLs, extracts insights, synthesizes trend briefs
 
----
-
-## File Structure
-
-The repository has been organized to keep the agent source code, documentation, and UI separate.
-
+**Workflow**:
 ```
-/
-├── src/                    # All Python source code for the agents
-│   ├── competitor_intelligence/
-│   ├── customer_insights/
-│   ├── market_trends_analyst/
-│   ├── marketing_orchestrator/
-│   ├── offer_design/
-│   └── utils/
-├── ui/                     # Contains the Streamlit user interface
-│   └── hackathon_ui.py
-├── docs/                   # All non-code documents, guides, and notes
-├── scripts/                # Helper scripts for running the project
-├── venv/                   # Your local Python virtual environment
-└── README.md               # This file
+Input Query → Data Collection (finds URLs) → Research Synthesis (analyzes content) → Trend Briefs
 ```
 
----
+### 2. Customer Insights
 
-## Part 1: Quick Start with ADK Web (Recommended)
+**Function**: Analyze customer behavioral data from BigQuery
 
-This is the most stable and straightforward way to run the multi-agent system. It uses Google's built-in Agent Development Kit (ADK) web interface.
+**Structure**:
+- **Root Agent**: `CustomerInsightsManagerAgent` (ParallelAgent)
+- **Sub-Agents**:
+  1. **Behavioral Analysis Agent** - Analyzes numerical data (redemptions, visits, spend)
+  2. **Sentiment Analysis Agent** - Analyzes text feedback (reviews, comments)
+  3. **Profile Synthesizer Agent** - Combines quantitative and qualitative insights
+
+**Workflow**:
+```
+Input Query → Behavioral Analysis (parallel) → Profile Synthesizer → Customer Profiles
+              Sentiment Analysis (parallel)
+```
+
+### 3. Offer Design
+
+**Function**: Synthesizes research into actionable offer concepts
+
+**Structure**:
+- **Root Agent**: `SimplifiedOfferDesignAgent` (LlmAgent)
+- **Input**: Market trends, customer insights
+- **Output**: 3 prioritized offer concepts
+
+### 4. Marketing Orchestrator (Root Agent)
+
+**Function**: Coordinates all teams in sequence
+
+**Workflow**:
+```
+User Query
+  ↓
+Step 1: Market Trends Analyst → trend_briefs[]
+  ↓
+Step 2: Customer Insights → customer_insights, segment_profiles
+  ↓
+Step 3: Offer Design → 3 prioritized offer_concepts[] (final output)
+```
+
+**Note**: Competitor Intelligence is commented out by default. See hackathon agenda for advanced path.
+
+## Project Structure
+
+```
+Wendy-hackathon/
+├── src/                          # Agent source code
+│   ├── marketing_orchestrator/   # Root orchestrator agent
+│   │   ├── agent.py             # Main orchestrator (SequentialAgent)
+│   │   └── README.md
+│   │
+│   ├── market_trends_analyst/   # Market research team
+│   │   ├── agent.py             # Root agent (SequentialAgent)
+│   │   └── sub_agents/
+│   │       ├── data_collection/
+│   │       │   ├── agent.py
+│   │       │   ├── instruction.txt
+│   │       │   └── tools.py
+│   │       └── research_synthesis/
+│   │           ├── agent.py
+│   │           ├── instruction.txt
+│   │           └── tools.py
+│   │
+│   ├── customer_insights/       # Customer analytics team
+│   │   ├── agent.py             # Root agent (ParallelAgent)
+│   │   ├── data/                # BigQuery data schemas and utilities
+│   │   └── sub_agents/
+│   │       ├── behavioral_analysis/
+│   │       │   ├── agent.py
+│   │       │   ├── instruction.txt
+│   │       │   └── tools.py     # BigQuery tools (crm_database_tool)
+│   │       ├── sentiment_analysis/
+│   │       │   ├── agent.py
+│   │       │   ├── instruction.txt
+│   │       │   └── tools.py     # BigQuery tools (feedback_database_tool)
+│   │       └── profile_synthesizer/
+│   │           ├── agent.py
+│   │           └── instruction.txt
+│   │
+│   ├── competitor_intelligence/ # Competitive analysis (optional)
+│   │   ├── agent.py
+│   │   └── sub_agents/
+│   │       ├── target_identification/
+│   │       ├── research_orchestrator/
+│   │       ├── competitor_analysis/
+│   │       └── whitespace_synthesizer/
+│   │
+│   ├── offer_design/            # Offer concept generation
+│   │   ├── agent.py
+│   │   └── sub_agents/
+│   │       └── simplified_offer_design/
+│   │           ├── agent.py
+│   │           └── instruction.txt
+│   │
+│   └── utils/                   # Shared utilities
+│       └── instruction_loader.py
+│
+├── docs/                        # Documentation
+│   └── hackathon_agenda.md     # Complete hackathon guide
+│
+├── .gitignore                   # Git ignore rules
+└── README.md                    # This file
+```
+
+## Getting Started
 
 ### Prerequisites
 
-1.  **Python 3.10+:** Ensure you have a modern version of Python installed.
-2.  **Google Cloud Project Access:** You must have access to the `gemini-copilot-testing` project in Google Cloud Platform.
-3.  **Google Cloud SDK:** You must have `gcloud` installed and configured.
-    - Install it from [here](https://cloud.google.com/sdk/docs/install).
-    - After installing, run `gcloud init`.
-4.  **Application Default Credentials (ADC):** The agents need to authenticate with Google Cloud services (like Vertex AI).
-    - Run the following command in your terminal:
-      ```bash
-      gcloud auth application-default login
-      ```
+- Python 3.10+
+- Google Cloud SDK (`gcloud`) installed and authenticated
+- Access to `gemini-copilot-testing` Google Cloud project
 
 ### Setup Instructions
 
-1.  **Create and Activate a Virtual Environment:**
-    - We recommend using `uv` for a fast and reliable experience. If you don't have it, install it with `pip install uv`.
-    - From the project root directory, run:
-      ```bash
-      # Create the virtual environment
-      python -m venv venv
+#### Mac/Linux
 
-      # Activate the environment (on Windows PowerShell)
-      .\venv\Scripts\Activate.ps1
-      ```
+```bash
+# Navigate to project directory
+cd wendy-hack-sprint
 
-2.  **Install Dependencies:**
-    - Use `uv` to install all the required Python packages.
-      ```bash
-      uv pip install google-adk google-cloud-aiplatform google-cloud-bigquery "uvicorn[standard]" streamlit
-      ```
+# Create virtual environment
+python3 -m venv venv
 
-3.  **Configure Environment Variables:**
-    - Each agent needs a `.env` file to connect to Google Cloud. **You must create this file in each of the agent directories** inside `src/`.
-    - **File Path:** `src/marketing_orchestrator/.env`
-    - **File Content:**
-      ```
-      GOOGLE_GENAI_USE_VERTEXAI="TRUE"
-      GOOGLE_CLOUD_PROJECT="483447458116"
-      GOOGLE_CLOUD_LOCATION="us-central1"
-      ```
-    - **Action:** Create the same `.env` file in the following directories:
-      - `src/market_trends_analyst/`
-      - `src/customer_insights/`
-      - `src/competitor_intelligence/`
-      - `src/offer_design/`
+# Activate virtual environment
+source venv/bin/activate
 
-### Running the System
+# Install dependencies
+pip install google-adk google-cloud-aiplatform google-cloud-bigquery
 
-1.  **Start the ADK Web Server:**
-    - Make sure your virtual environment is activated.
-    - Run the following command from the project root:
-      ```bash
-      adk web src
-      ```
-    - This will start a local web server, typically at `http://localhost:8000`.
-    - **Note:** Run `adk web src` (not `src/marketing_orchestrator`) so that ADK correctly identifies all agents. You'll then select "marketing_orchestrator" from the dropdown in the web interface.
+# Authenticate with Google Cloud
+gcloud auth application-default login
 
-2.  **Interact with the Agent:**
-    - Open the provided URL in your browser.
-    - Select "marketing_orchestrator" from the agent dropdown menu.
-    - In the chat interface, enter your request.
-    - **Example Prompt:** `Develop three innovative, app-exclusive offers to increase breakfast traffic among Gen Z customers. Focus on trending flavors and value.`
+# Set Google Cloud project
+gcloud config set project gemini-copilot-testing
 
-You will see the agent process your request, and the final offer concepts will be displayed in the UI.
+# Launch ADK Web Server
+adk web src
+```
+
+#### Windows
+
+```powershell
+# Navigate to project directory
+cd wendy-hack-sprint
+
+# Create virtual environment
+python -m venv venv
+
+# Activate virtual environment
+.\venv\Scripts\activate
+
+# Install dependencies
+pip install google-adk google-cloud-aiplatform google-cloud-bigquery
+
+# Authenticate with Google Cloud
+gcloud auth application-default login
+
+# Set Google Cloud project
+gcloud config set project gemini-copilot-testing
+
+# Launch ADK Web Server
+adk web src
+```
+
+### Access ADK Web Interface
+
+1. Open browser to `http://localhost:8000`
+2. Select "marketing_orchestrator" from agent dropdown menu
+3. Enter your query in the chat interface
+
+**Example Query**: "Develop three innovative offers to increase breakfast traffic among Gen Z customers during Q1 (January-March) breakfast hours (6am-11am)"
+
+### Next Steps
+
+For complete hackathon instructions, testing exercises, and modification guidelines, see:
+- **[Hackathon Agenda](docs/hackathon_agenda.md)** - Complete guide with system overview, testing exercises, and modification tasks
+
+## System Architecture
+
+### Agent Types
+
+- **SequentialAgent**: Executes sub-agents in order, passing results sequentially
+- **ParallelAgent**: Executes sub-agents simultaneously for independent tasks
+- **LlmAgent**: Single agent using Large Language Model with tools
+
+### Data Flow
+
+1. **Market Trends Analyst** (SequentialAgent)
+   - Data Collection → Research Synthesis
+   - Output: Trend briefs
+
+2. **Customer Insights** (ParallelAgent)
+   - Behavioral Analysis (parallel) → Profile Synthesizer
+   - Sentiment Analysis (parallel)
+   - Output: Customer profiles with metrics
+
+3. **Offer Design** (LlmAgent)
+   - Input: Trend briefs + Customer profiles
+   - Output: 3 prioritized offer concepts
+
+### ADK Web Features
+
+- **Sessions**: Each conversation creates a session with full history
+- **Events**: Step-by-step agent actions (tool calls, responses)
+- **Trace**: Visual execution flow showing agent relationships and data flow
+
+## Key Files
+
+### Agent Configuration
+
+- `src/marketing_orchestrator/agent.py` - Main orchestrator workflow
+- `src/market_trends_analyst/agent.py` - Market trends root agent
+- `src/customer_insights/agent.py` - Customer insights root agent
+- `src/offer_design/sub_agents/simplified_offer_design/agent.py` - Offer design agent
+
+### Instructions (Modify These)
+
+- `src/market_trends_analyst/sub_agents/data_collection/instruction.txt`
+- `src/market_trends_analyst/sub_agents/research_synthesis/instruction.txt`
+- `src/customer_insights/sub_agents/behavioral_analysis/instruction.txt`
+- `src/customer_insights/sub_agents/sentiment_analysis/instruction.txt`
+- `src/customer_insights/sub_agents/profile_synthesizer/instruction.txt`
+- `src/offer_design/sub_agents/simplified_offer_design/instruction.txt`
+
+### Tools (Add/Modify These)
+
+- `src/customer_insights/sub_agents/behavioral_analysis/tools.py` - BigQuery CRM tools
+- `src/customer_insights/sub_agents/sentiment_analysis/tools.py` - BigQuery feedback tools
+- `src/market_trends_analyst/sub_agents/data_collection/tools.py` - Search tools
+
+### Data
+
+- `src/customer_insights/data/BIGQUERY_TABLES_SUMMARY.md` - BigQuery schema documentation
+- BigQuery datasets: CRM data, redemption logs, feedback data (read-only access)
+
+## Documentation
+
+- **[Hackathon Agenda](docs/hackathon_agenda.md)** - Complete hackathon guide with:
+  - System overview and testing exercises
+  - Agent modification instructions
+  - Evaluation criteria
+  - Quick reference
 
 ---
 
-## Part 2: Using the Streamlit UI (Advanced)
-
-This project includes a custom Streamlit UI for a more tailored user experience. Please note that this method is currently a work in progress and may have some instability.
-
-### Overview
-
-The Streamlit UI communicates with a backend ADK **API server**. This is different from the `adk web` command, as it exposes the agent as an API rather than a web page.
-
-### Setup and Running
-
-1.  **Complete All Prerequisites and Setup from Part 1.**
-    - The virtual environment, dependencies, and `.env` files must be set up correctly first.
-
-2.  **Start the ADK API Server:**
-    - In a terminal (with the venv activated), run the following command. We are forcing debug logging to help troubleshoot.
-      ```powershell
-      $env:ADK_LOG_LEVEL="DEBUG"
-      adk api_server src/marketing_orchestrator
-      ```
-    - This will start the backend server on `http://localhost:8000`.
-
-3.  **Run the Streamlit App:**
-    - Open a **second terminal** (and activate the venv).
-    - Run the Streamlit app:
-      ```powershell
-      streamlit run ui/hackathon_ui.py
-      ```
-    - This will open the Streamlit interface in your browser.
-
-4.  **Interact and Observe:**
-    - Use the UI to enter your prompt and click "Generate Offers".
-    - Watch the ADK API Server terminal. You should see `DEBUG` logs indicating that the agent run has started.
-
----
-
-## How the Multi-Agent System Works
-
-This system uses a **Sequential Agent** architecture. The `MarketingOrchestratorAgent` acts as a manager, executing each specialized agent team one by one and passing the results to the next.
-
-1.  **Input:** Your prompt is sent to the `MarketingOrchestratorAgent`.
-2.  **Research Phase:**
-    - It first invokes the `MarketTrendsAgent` to find relevant articles and trends.
-    - The results are passed to the `CustomerInsightsAgent`, which queries the BigQuery database for related customer data.
-    - The combined findings are then given to the `CompetitorIntelAgent` for competitive analysis.
-3.  **Synthesis Phase:**
-    - All research materials are handed over to the `SimplifiedOfferDesignAgent`.
-    - This agent's sole purpose is to read the research and generate the final offer concepts in a structured JSON format.
-4.  **Output:** The final JSON is sent back to the user interface for display.
-
----
-
-## Your Mission: What to Modify
-
-Your goal during this hackathon is to improve and experiment with this system. Here are some ideas:
-
--   **Modify Agent Instructions:** The core logic of each agent is defined in its `instruction.txt` file. Try changing the instructions to alter an agent's behavior, personality, or focus.
--   **Add New Tools:** Create new Python functions and register them as tools for the agents to use. For example, a tool that calculates the potential cost of a promotion.
--   **Change the Agent Architecture:** The main workflow is defined in `src/marketing_orchestrator/agent.py`. Try changing the order of the agents, or even switching to a `ParallelAgent` to have them run at the same time!
--   **Improve the Final Output:** Modify the `SimplifiedOfferDesignAgent` to produce more detailed or differently structured JSON.
-
-## Key Files to Explore
-
--   **Root Agent Logic:**
-    - `src/marketing_orchestrator/agent.py`: Defines the main sequence of agent execution. A great place to change the overall workflow.
--   **Specialist Agent Instructions:**
-    - `src/market_trends_analyst/sub_agents/data_collection/instruction.txt`: Controls how the market research agent behaves.
-    - `src/customer_insights/sub_agents/behavioral_analysis/instruction.txt`: Defines how the BigQuery database is queried.
--   **Tools:**
-    - `src/customer_insights/sub_agents/behavioral_analysis/tools.py`: Contains the Python function that connects to BigQuery. A perfect place to add new data tools.
--   **UI Code:**
-    - `ui/hackathon_ui.py`: The Streamlit application. Feel free to customize the user interface.
+*For hackathon participants: See `docs/hackathon_agenda.md` for detailed instructions, testing exercises, and modification tasks.*
