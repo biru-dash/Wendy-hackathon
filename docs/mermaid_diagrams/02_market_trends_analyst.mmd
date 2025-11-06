@@ -1,0 +1,23 @@
+graph TB
+    Input[User Query:<br/>Marketing Research Goal] --> MTA[Market Trends Analyst<br/>SequentialAgent]
+    
+    MTA --> Step1[Step 1: Data Collection Agent<br/>LlmAgent]
+    Step1 --> Step2[Step 2: Research Synthesis Agent<br/>LlmAgent]
+    
+    Step1 --> Tool1[Tools:<br/>google_search]
+    Tool1 --> URLs[Collected URLs<br/>Trend Data]
+    URLs --> Step2
+    
+    Step2 --> Tool2[Tools:<br/>web_scraper_tool]
+    Tool2 --> Content[Article Content<br/>Web Data]
+    Content --> Step2
+    
+    Step2 --> Output[Output:<br/>Trend Briefs<br/>Market Insights]
+    
+    style MTA fill:#fff3e0,stroke:#e65100,stroke-width:3px
+    style Step1 fill:#ffe0b2,stroke:#e65100,stroke-width:2px
+    style Step2 fill:#ffe0b2,stroke:#e65100,stroke-width:2px
+    style Tool1 fill:#ffcc80,stroke:#bf360c,stroke-width:1px
+    style Tool2 fill:#ffcc80,stroke:#bf360c,stroke-width:1px
+    style Output fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px
+

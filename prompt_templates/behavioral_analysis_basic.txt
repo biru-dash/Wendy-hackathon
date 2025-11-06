@@ -7,3 +7,4 @@ Use the crm_database_tool to query customer data.
 Look at visits, spending, and customer segments.
 
 Return what you find about customer behavior.
+

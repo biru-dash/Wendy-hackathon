@@ -6,6 +6,10 @@ Wendy's internal data sources, which are mocked using a BigQuery database.
 It uses a ParallelAgent to conduct different types of analysis simultaneously,
 making the research process more efficient.
 """
+# Load environment variables from .env file (must be imported early)
+from utils.env_loader import load_env
+load_env()
+
 from google.adk.agents.parallel_agent import ParallelAgent
 
 from .sub_agents.behavioral_analysis.agent import behavioral_analysis_agent

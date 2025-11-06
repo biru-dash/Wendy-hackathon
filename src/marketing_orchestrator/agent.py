@@ -19,6 +19,10 @@ if str(project_root) not in sys.path:
 if str(src_dir) not in sys.path:
     sys.path.insert(0, str(src_dir))
 
+# Load environment variables from .env file (must be imported early)
+from src.utils.env_loader import load_env
+load_env()
+
 from google.adk.agents.sequential_agent import SequentialAgent
 
 # Import the primary agent from each specialized team.

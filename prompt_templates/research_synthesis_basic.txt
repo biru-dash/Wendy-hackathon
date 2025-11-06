@@ -7,3 +7,4 @@ Use the web_scraper_tool to read each URL.
 Summarize what you find.
 
 Return a summary of the trends.
+

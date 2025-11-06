@@ -16,7 +16,7 @@ Multi-agent AI system for generating data-driven promotional offers at Wendy's. 
 
 - Python 3.10+
 - Google Cloud SDK (`gcloud`) installed and authenticated
-- Access to `gemini-copilot-testing` Google Cloud project
+- Access to `cdp-tst-5fba` Google Cloud project
 - Git installed
 
 ### Clone Repository
@@ -32,6 +32,46 @@ Replace `<repository-url>` with the actual repository URL provided by organizers
 
 ### Setup Instructions
 
+**Important**: Use the commands for your operating system. Windows uses PowerShell commands, while Mac/Linux use bash commands.
+
+#### Windows (PowerShell)
+
+```powershell
+# Create virtual environment
+python -m venv venv
+
+# Activate virtual environment (Windows PowerShell)
+.\venv\Scripts\Activate.ps1
+
+# If you get an execution policy error, run this first:
+# Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+
+# Install dependencies
+pip install google-adk google-cloud-aiplatform google-cloud-bigquery
+
+# Authenticate with Google Cloud
+# This will open a browser window - use your Wendy's email to sign in
+gcloud auth application-default login
+
+# (Optional) Set Google Cloud project for gcloud commands
+# Note: This is optional - your .env file will set the project for the agents
+# If you get a password prompt, you can skip this step
+# gcloud config set project cdp-tst-5fba
+
+# Configure environment variables
+Copy-Item .env.example .env
+# Edit .env file with your GCP project details
+
+# Launch ADK Web Server
+adk web src
+```
+
+**Windows Alternative** (if PowerShell activation doesn't work):
+```cmd
+# Use Command Prompt (cmd.exe) instead
+venv\Scripts\activate.bat
+```
+
 #### Mac/Linux
 
 ```bash
@@ -45,32 +85,17 @@ source venv/bin/activate
 pip install google-adk google-cloud-aiplatform google-cloud-bigquery
 
 # Authenticate with Google Cloud
+# This will open a browser window - use your Wendy's email to sign in
 gcloud auth application-default login
 
-# Set Google Cloud project
-gcloud config set project gemini-copilot-testing
+# (Optional) Set Google Cloud project for gcloud commands
+# Note: This is optional - your .env file will set the project for the agents
+# If you get a password prompt, you can skip this step
+# gcloud config set project cdp-tst-5fba
 
-# Launch ADK Web Server
-adk web src
-```
-
-#### Windows
-
-```powershell
-# Create virtual environment
-python -m venv venv
-
-# Activate virtual environment
-.\venv\Scripts\activate
-
-# Install dependencies
-pip install google-adk google-cloud-aiplatform google-cloud-bigquery
-
-# Authenticate with Google Cloud
-gcloud auth application-default login
-
-# Set Google Cloud project
-gcloud config set project gemini-copilot-testing
+# Configure environment variables
+cp .env.example .env
+# Edit .env file with your GCP project details
 
 # Launch ADK Web Server
 adk web src

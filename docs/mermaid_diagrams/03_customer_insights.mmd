@@ -1,0 +1,35 @@
+graph TB
+    Input[User Query:<br/>Customer Analysis Goal] --> CI[Customer Insights Manager<br/>ParallelAgent]
+    
+    CI --> Parallel1[Behavioral Analysis Agent<br/>LlmAgent]
+    CI --> Parallel2[Profile Synthesizer Agent<br/>LlmAgent]
+    CI --> Parallel3[Sentiment Analysis Agent<br/>LlmAgent]
+    
+    Parallel1 --> Tool1[Tools:<br/>crm_database_tool<br/>redemption_log_tool]
+    Tool1 --> BQ1[(BigQuery:<br/>CRM Data<br/>Redemption Logs)]
+    BQ1 --> Output1[Behavioral Patterns<br/>Transaction Metrics]
+    
+    Parallel2 --> Tool2[Tools:<br/>BigQuery Tools]
+    Tool2 --> BQ2[(BigQuery:<br/>Customer Data)]
+    BQ2 --> Output2[Customer Profiles<br/>Segment Analysis]
+    
+    Parallel3 --> Tool3[Tools:<br/>feedback_database_tool]
+    Tool3 --> BQ3[(BigQuery:<br/>Feedback Data<br/>Reviews)]
+    BQ3 --> Output3[Sentiment Analysis<br/>Key Phrases]
+    
+    Output1 --> Final[Final Output:<br/>Customer Insights<br/>Segment Profiles]
+    Output2 --> Final
+    Output3 --> Final
+    
+    style CI fill:#f3e5f5,stroke:#4a148c,stroke-width:3px
+    style Parallel1 fill:#e1bee7,stroke:#4a148c,stroke-width:2px
+    style Parallel2 fill:#e1bee7,stroke:#4a148c,stroke-width:2px
+    style Parallel3 fill:#e1bee7,stroke:#4a148c,stroke-width:2px
+    style Tool1 fill:#ce93d8,stroke:#6a1b9a,stroke-width:1px
+    style Tool2 fill:#ce93d8,stroke:#6a1b9a,stroke-width:1px
+    style Tool3 fill:#ce93d8,stroke:#6a1b9a,stroke-width:1px
+    style BQ1 fill:#fff9c4,stroke:#f57f17,stroke-width:2px
+    style BQ2 fill:#fff9c4,stroke:#f57f17,stroke-width:2px
+    style BQ3 fill:#fff9c4,stroke:#f57f17,stroke-width:2px
+    style Final fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px
+

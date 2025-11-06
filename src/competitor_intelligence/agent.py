@@ -5,6 +5,10 @@ This agent is responsible for gathering and analyzing information about
 Wendy's competitors. It uses a SequentialAgent to orchestrate a workflow of
 identifying targets, conducting research, and synthesizing the findings.
 """
+# Load environment variables from .env file (must be imported early)
+from utils.env_loader import load_env
+load_env()
+
 from google.adk.agents.sequential_agent import SequentialAgent
 
 from .sub_agents.competitor_analysis.agent import competitor_analysis_agent

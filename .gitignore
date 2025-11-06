@@ -20,6 +20,8 @@ ENV/
 .env
 .env.local
 .env.*.local
+# Keep .env.example as a template (don't ignore it)
+!.env.example
 
 # OS
 .DS_Store

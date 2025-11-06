@@ -1,0 +1,45 @@
+graph TB
+    User[User Query] --> MO[Marketing Orchestrator<br/>SequentialAgent<br/>Root Agent]
+    
+    MO --> Sub1[Sub-Agent 1:<br/>Market Trends Analyst<br/>SequentialAgent]
+    Sub1 --> MTA_Sub1[Data Collection Agent]
+    Sub1 --> MTA_Sub2[Research Synthesis Agent]
+    MTA_Sub1 --> MTA_Output[Trend Briefs]
+    MTA_Sub2 --> MTA_Output
+    
+    MO --> Sub2[Sub-Agent 2:<br/>Customer Insights Manager<br/>ParallelAgent]
+    Sub2 --> CI_Sub1[Behavioral Analysis Agent]
+    Sub2 --> CI_Sub2[Profile Synthesizer Agent]
+    Sub2 --> CI_Sub3[Sentiment Analysis Agent]
+    CI_Sub1 --> CI_Output[Customer Insights<br/>Segment Profiles]
+    CI_Sub2 --> CI_Output
+    CI_Sub3 --> CI_Output
+    
+    MO --> Sub3[Sub-Agent 3:<br/>Competitor Intelligence<br/>SequentialAgent<br/>OPTIONAL - Commented Out]
+    Sub3 --> CompI_Sub1[Target Identification]
+    Sub3 --> CompI_Sub2[Research Orchestrator]
+    Sub3 --> CompI_Sub3[Competitor Analysis]
+    Sub3 --> CompI_Sub4[Whitespace Synthesizer]
+    CompI_Sub1 --> CompI_Output[Whitespace Opportunities]
+    CompI_Sub2 --> CompI_Output
+    CompI_Sub3 --> CompI_Output
+    CompI_Sub4 --> CompI_Output
+    
+    MO --> Sub4[Sub-Agent 4:<br/>Simplified Offer Design<br/>LlmAgent]
+    
+    MTA_Output --> Sub4
+    CI_Output --> Sub4
+    CompI_Output -.-> Sub4
+    
+    Sub4 --> Final[Final Output:<br/>3 Prioritized Offer Concepts]
+    
+    style MO fill:#e1f5ff,stroke:#01579b,stroke-width:4px
+    style Sub1 fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    style Sub2 fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
+    style Sub3 fill:#e8f5e9,stroke:#1b5e20,stroke-width:2px,stroke-dasharray: 5 5
+    style Sub4 fill:#fce4ec,stroke:#880e4f,stroke-width:2px
+    style Final fill:#c8e6c9,stroke:#2e7d32,stroke-width:3px
+    style MTA_Output fill:#ffe0b2,stroke:#e65100,stroke-width:1px
+    style CI_Output fill:#e1bee7,stroke:#4a148c,stroke-width:1px
+    style CompI_Output fill:#c8e6c9,stroke:#1b5e20,stroke-width:1px,stroke-dasharray: 3 3
+

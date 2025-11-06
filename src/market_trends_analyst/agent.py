@@ -5,6 +5,10 @@ This agent is responsible for scanning the internet to find relevant news,
 articles, and discussions related to a specific marketing query. It uses a
 SequentialAgent architecture to first collect data and then synthesize it.
 """
+# Load environment variables from .env file (must be imported early)
+from utils.env_loader import load_env
+load_env()
+
 from google.adk.agents.sequential_agent import SequentialAgent
 
 from .sub_agents.data_collection.agent import data_collection_agent

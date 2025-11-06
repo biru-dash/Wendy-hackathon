@@ -1,0 +1,33 @@
+graph TB
+    Input[Input:<br/>Market Trends<br/>Customer Insights<br/>Competitor Intelligence] --> OD[Offer Design Manager<br/>SequentialAgent]
+    
+    OD --> Step1[Step 1: Concept Generation Agent<br/>LlmAgent]
+    Step1 --> Step2[Step 2: Offer Definition Agent<br/>LlmAgent]
+    Step2 --> Step3[Step 3: Rationale Agent<br/>LlmAgent]
+    Step3 --> Step4[Step 4: Prioritization Agent<br/>LlmAgent]
+    
+    Step1 --> Output1[RAW_CONCEPTS<br/>10-15 Creative Ideas]
+    Output1 --> Step2
+    
+    Step2 --> Output2[DEFINED_OFFERS<br/>3-5 Structured Offers]
+    Output2 --> Step3
+    
+    Step3 --> Output3[OFFERS_WITH_RATIONALE<br/>Evidence Citations]
+    Output3 --> Step4
+    
+    Step4 --> Output[FINAL_OFFER_CONCEPTS<br/>Ranked List with:<br/>- Feasibility Assessment<br/>- Impact Assessment<br/>- Implementation Recommendations]
+    
+    subgraph Simplified[Simplified Offer Design<br/>Single LlmAgent - Used in Hackathon]
+        SimplifiedInput[All Inputs] --> SimplifiedAgent[Simplified Offer Design Agent]
+        SimplifiedAgent --> SimplifiedOutput[3 Prioritized Offers]
+    end
+    
+    style OD fill:#fce4ec,stroke:#880e4f,stroke-width:3px
+    style Step1 fill:#f8bbd0,stroke:#880e4f,stroke-width:2px
+    style Step2 fill:#f8bbd0,stroke:#880e4f,stroke-width:2px
+    style Step3 fill:#f8bbd0,stroke:#880e4f,stroke-width:2px
+    style Step4 fill:#f8bbd0,stroke:#880e4f,stroke-width:2px
+    style Output fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px
+    style Simplified fill:#fff9c4,stroke:#f57f17,stroke-width:2px,stroke-dasharray: 5 5
+    style SimplifiedOutput fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px
+

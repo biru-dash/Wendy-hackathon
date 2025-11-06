@@ -1,0 +1,32 @@
+graph TB
+    Input[User Query:<br/>Competitive Analysis Goal] --> CompI[Competitor Intelligence Manager<br/>SequentialAgent]
+    
+    CompI --> Step1[Step 1: Target Identification Agent<br/>LlmAgent]
+    Step1 --> Step2[Step 2: Research Orchestrator Agent<br/>LlmAgent]
+    Step2 --> Step3[Step 3: Competitor Analysis Agent<br/>LlmAgent]
+    Step3 --> Step4[Step 4: Whitespace Synthesizer Agent<br/>LlmAgent]
+    
+    Step1 --> Tool1[Tools:<br/>google_search]
+    Tool1 --> Competitors[Identified Competitors<br/>Target List]
+    Competitors --> Step2
+    
+    Step2 --> Tool2[Tools:<br/>competitor_analysis_tool<br/>AgentTool]
+    Tool2 --> Step3
+    Tool2 --> Research[Research Coordination<br/>Multi-Competitor Analysis]
+    
+    Step3 --> Tool3[Tools:<br/>google_search]
+    Tool3 --> Analysis[Competitor Details<br/>Strategies & Offerings]
+    Analysis --> Step4
+    
+    Step4 --> Output[Output:<br/>Whitespace Opportunities<br/>Competitive Gaps]
+    
+    style CompI fill:#e8f5e9,stroke:#1b5e20,stroke-width:3px
+    style Step1 fill:#c8e6c9,stroke:#1b5e20,stroke-width:2px
+    style Step2 fill:#c8e6c9,stroke:#1b5e20,stroke-width:2px
+    style Step3 fill:#c8e6c9,stroke:#1b5e20,stroke-width:2px
+    style Step4 fill:#c8e6c9,stroke:#1b5e20,stroke-width:2px
+    style Tool1 fill:#a5d6a7,stroke:#2e7d32,stroke-width:1px
+    style Tool2 fill:#a5d6a7,stroke:#2e7d32,stroke-width:1px
+    style Tool3 fill:#a5d6a7,stroke:#2e7d32,stroke-width:1px
+    style Output fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px
+

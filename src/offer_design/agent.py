@@ -1,4 +1,8 @@
 """Offer Design Manager Agent with Sub-Agents Architecture"""
+# Load environment variables from .env file (must be imported early)
+from utils.env_loader import load_env
+load_env()
+
 from google.adk.agents.sequential_agent import SequentialAgent
 
 # Import sub-agents for SequentialAgent workflow
