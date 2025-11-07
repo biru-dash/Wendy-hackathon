@@ -65,13 +65,12 @@ Rank the top 3-5 whitespace opportunities by:
 - Competitive advantage potential
 
 **Hackathon Challenge**: 
-- Make instructions specific to the fixed goal (Gen Z breakfast in Q1)
-- Enhance whitespace identification to focus on breakfast-specific opportunities
-- Prioritize opportunities by potential impact for Gen Z breakfast segment
-- Quantify opportunity size (estimated Gen Z breakfast customer base, Q1 market opportunity)
-- Include competitive advantage analysis for breakfast daypart
-- Focus on high-performing breakfast mechanics with proven metrics
-- Consider Q1 seasonal factors and Gen Z breakfast preferences
+- Adapt whitespace identification to the user’s target segment, daypart, or product focus.
+- Prioritize opportunities by potential impact for that audience/occasion.
+- Quantify opportunity size using the relevant customer base and timeframe (e.g., dinner traffic in Q3).
+- Include competitive advantage analysis tailored to the specified context.
+- Highlight proven mechanics and whitespace patterns that align with the user’s goal.
+- Consider seasonal or situational factors that influence the chosen focus.
 
 Key Principles:
 - Be specific and evidence-based (reference competitor examples)

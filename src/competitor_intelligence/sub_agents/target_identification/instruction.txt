@@ -24,9 +24,9 @@ Provide a structured list of competitors with their digital assets. Include:
 
 **Hackathon Challenge**: 
 - Make instructions specific to the fixed goal (Gen Z breakfast in Q1)
-- Enhance competitor identification to focus on QSR competitors with strong breakfast programs
-- Include their key digital assets and breakfast-specific offerings
-- Consider competitors that actively target Gen Z for breakfast
+- Enhance competitor identification to focus on QSR competitors relevant to the user’s goal (daypart, segment, or product)
+- Include their key digital assets and offerings tied to that focus
+- Consider competitors actively targeting the same audience or occasion
 
 Focus on:
 - Top 5-7 most relevant competitors

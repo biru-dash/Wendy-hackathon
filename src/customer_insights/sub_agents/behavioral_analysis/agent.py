@@ -7,8 +7,8 @@ def get_behavioral_tools():
     """Get tools for BehavioralAnalysisAgent"""
     # Import the wrapped FunctionTool instance
     # Participants can add more tools during hackathon
-    from .tools import crm_database_tool
-    return [crm_database_tool]
+    from .tools import crm_database_tool, redemption_log_tool
+    return [crm_database_tool, redemption_log_tool]
 
 behavioral_analysis_agent = LlmAgent(
     name="BehavioralAnalysisAgent",

@@ -36,10 +36,10 @@ Provide a structured profile covering:
 - Notable innovations
 
 **Hackathon Challenge**: 
-- Make instructions specific to the fixed goal (Gen Z breakfast in Q1)
-- Enhance analysis to focus on breakfast-specific competitor strategies
-- Include: breakfast pricing, morning promotions, breakfast digital/delivery initiatives
-- Consider: how competitors target Gen Z for breakfast, Q1 seasonal breakfast campaigns
+- Align your analysis with the user’s goal (e.g., Gen Z dinner, family lunch, late-night value seekers)
+- Highlight competitor strategies, pricing, and promotions relevant to that goal
+- Capture digital/delivery initiatives, channel tactics, and messaging tied to the target segment or daypart
+- Consider seasonal or contextual factors (e.g., Q1, summer travel season) that influence the specified focus
 - Include specific examples with metrics when available
 
 Your output will be compiled with other competitor profiles to create the competitive landscape.
