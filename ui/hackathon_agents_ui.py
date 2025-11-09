@@ -1,5 +1,6 @@
 import json
 import time
+from contextlib import nullcontext
 from typing import Any, Dict, List, Optional, Tuple
 
 import requests
@@ -23,8 +24,9 @@ AGENT_METADATA = {
         "overview_md": """
 ### What does this agent do?
 - Acts like a **Market Research Analyst**.
-- Scans articles, blogs, and social channels to surface emerging breakfast trends relevant to Gen Z during Q1.
+- Scans articles, blogs, and social channels to surface emerging breakfast trends and consumer signals.
 - Supplies these insights to downstream teams (Customer Insights, Offer Design, Orchestrator).
+- In real life, market research analysts continuously track consumer behavior, competitor moves, and macro signals, then package the takeaways for marketing and product teams—this agent emulates that end-to-end loop programmatically.
 
 ### How does it achieve this?
 1. **Data Collection Agent** hunts for URLs using `google_search`.
@@ -250,6 +252,7 @@ Prompt → Target Identification → Research Orchestrator → Competitor Analys
 }
 
 AGENT_CHOICES = {meta["title"]: key for key, meta in AGENT_METADATA.items()}
+UNCHANGED_POLL_LIMIT = 3
 
 # ---------------------------------------------------------------------------
 # Helper functions
@@ -400,12 +403,15 @@ def poll_session_for_data(agent_name: str, user_id: str, session_id: str, status
             if event_id not in seen_event_ids:
                 seen_event_ids.add(event_id)
                 collected_events.append(event)
-                if event.get("role") == "model":
-                    text = event.get("parts", [{}])[0].get("text", "")
-                    if text:
-                        final_summary = text
+                extracted_text = _extract_final_model_text([event])
+                if extracted_text:
+                    final_summary = extracted_text
 
         if _session_complete(events):
+            status.update(
+                label="Final response detected — session complete.",
+                state="complete",
+            )
             break
 
         if len(events) == previous_event_count:
@@ -414,9 +420,11 @@ def poll_session_for_data(agent_name: str, user_id: str, session_id: str, status
             unchanged_cycles = 0
             previous_event_count = len(events)
 
-        if final_summary and unchanged_cycles >= 2:
+        if unchanged_cycles >= UNCHANGED_POLL_LIMIT:
+            if not final_summary:
+                final_summary = _extract_final_model_text(events)
             status.update(
-                label="No new events detected; assuming completion. Review in ADK Web UI for full trace.",
+                label="No new events detected; stopping polling. Review in ADK Web UI for full trace.",
                 state="complete",
             )
             break
@@ -459,13 +467,117 @@ def _session_complete(events: List[Dict]) -> bool:
     if not events:
         return False
     for event in reversed(events):
-        if event.get("isFinalResponse") or event.get("type") in {
+        event_type = event.get("type") or ""
+        if event.get("isFinalResponse") or event_type in {
             "agent_response",
             "agent_completed",
             "session_completed",
+            "session.complete",
+            "session.completed",
+            "response_completed",
+            "session.result",
         }:
             return True
     return False
+
+
+def _extract_final_model_text(events: List[Dict]) -> Optional[str]:
+    for event in reversed(events):
+        if not isinstance(event, dict):
+            continue
+        if event.get("role") not in (None, "", "model", "assistant"):
+            continue
+        text_fields: List[str] = []
+        if event.get("text"):
+            text_fields.append(event["text"])
+        parts = event.get("parts") or []
+        for part in parts:
+            if isinstance(part, dict):
+                part_text = part.get("text")
+                if part_text:
+                    text_fields.append(part_text)
+        payload = event.get("payload")
+        if isinstance(payload, dict):
+            maybe_texts = _extract_text_blocks(payload)
+            text_fields.extend(maybe_texts)
+        content = event.get("content")
+        if isinstance(content, dict):
+            maybe_texts = _extract_text_blocks(content)
+            text_fields.extend(maybe_texts)
+        elif isinstance(content, list):
+            for item in content:
+                maybe_texts = _extract_text_blocks(item)
+                text_fields.extend(maybe_texts)
+
+        for candidate in text_fields:
+            normalized = candidate.strip()
+            if normalized:
+                return normalized
+    return None
+
+
+def _render_market_trends_summary(summary: str):
+    intro_text = summary.strip()
+    trend_data = None
+    remainder = summary.strip()
+
+    if "```json" in summary:
+        json_start = summary.index("```json") + len("```json")
+        json_end = summary.find("```", json_start)
+        if json_end != -1:
+            json_payload = summary[json_start:json_end].strip()
+            try:
+                trend_data = json.loads(json_payload)
+            except json.JSONDecodeError:
+                trend_data = None
+            intro_text = summary[: summary.index("```json")].strip()
+            remainder = summary[json_end + len("```") :].strip()
+
+    exec_summary = ""
+    if "### Executive Summary" in remainder:
+        _, exec_summary = remainder.split("### Executive Summary", 1)
+        exec_summary = exec_summary.strip()
+    else:
+        exec_summary = remainder.strip()
+
+    if intro_text and intro_text != exec_summary:
+        st.caption(intro_text)
+
+    if exec_summary:
+        st.subheader("Executive Summary")
+        st.markdown(exec_summary)
+
+    if trend_data:
+        st.subheader("Trend Brief JSON")
+        st.json(trend_data)
+
+        if isinstance(trend_data, dict):
+            briefs = trend_data.get("trend_briefs") or trend_data.get("trend_brief") or []
+            if briefs:
+                st.subheader("Market Trends Briefs")
+                for idx, brief in enumerate(briefs, start=1):
+                    title = brief.get("title") or f"Trend {idx}"
+                    summary_text = brief.get("summary", "")
+                    evidence = brief.get("evidence_snippets") or []
+                    signal = brief.get("signal_strength")
+                    velocity = brief.get("velocity")
+                    recommendations = brief.get("recommended_directions")
+
+                    with st.expander(f"{idx}. {title}", expanded=(idx == 1)):
+                        if summary_text:
+                            st.markdown(summary_text)
+                        if signal or velocity:
+                            st.markdown(
+                                f"- **Signal strength:** {signal or 'Unknown'}\n"
+                                f"- **Velocity:** {velocity or 'Unknown'}"
+                            )
+                        if evidence:
+                            st.markdown("**Evidence snippets:**")
+                            for snippet in evidence:
+                                st.write(f"- {snippet}")
+                        if recommendations:
+                            st.markdown("**Recommended directions:**")
+                            st.markdown(recommendations)
 
 
 def _parse_sse_payload(message: str):
@@ -631,26 +743,49 @@ with testing_tab:
 
 with results_tab:
     if run_state:
-        generated_outputs = _collect_generated_outputs(run_state)
-        offer_concepts = _parse_offer_concepts(generated_outputs)
+        final_summary_text = (
+            run_state.get("final_summary")
+            or _extract_final_model_text(run_state.get("events", []) or [])
+            or _extract_final_model_text(run_state.get("sse_messages", []) or [])
+        )
 
-        if offer_concepts:
-            st.subheader("Generated Offer Concepts")
-            for idx, (name, description) in enumerate(offer_concepts, start=1):
-                with st.expander(f"Offer {idx}: {name}", expanded=(idx == 1)):
-                    st.markdown(description)
-        elif run_state.get("final_summary"):
-            st.subheader("Agent Summary")
-            st.markdown(run_state["final_summary"])
-        elif generated_outputs:
-            st.subheader("Generated Output")
-            for idx, text in enumerate(generated_outputs, start=1):
-                with st.expander(f"Result Segment {idx}", expanded=(idx == 1)):
-                    st.markdown(text)
+        if agent_key == "market_trends_analyst":
+            if final_summary_text:
+                _render_market_trends_summary(final_summary_text)
+            else:
+                st.caption(
+                    "Unable to locate the final summary in this session. Open the ADK Web trace for full details."
+                )
         else:
-            st.caption(
-                "Run completed but no structured output was extracted. Check the SSE stream or ADK Web UI."
-            )
+            if final_summary_text:
+                st.subheader("Executive Summary")
+                st.markdown(final_summary_text)
+
+            generated_outputs = _collect_generated_outputs(run_state)
+            if final_summary_text:
+                generated_outputs = [
+                    text
+                    for text in generated_outputs
+                    if text.strip() != final_summary_text.strip()
+                ]
+
+            offer_concepts = _parse_offer_concepts(generated_outputs)
+
+            if offer_concepts:
+                st.subheader("Detailed Results")
+                for idx, (name, description) in enumerate(offer_concepts, start=1):
+                    with st.expander(f"Offer {idx}: {name}", expanded=(idx == 1)):
+                        st.markdown(description)
+            elif generated_outputs:
+                st.subheader("Detailed Results")
+                for idx, text in enumerate(generated_outputs, start=1):
+                    with st.expander(f"Result Segment {idx}", expanded=(idx == 1)):
+                        st.markdown(text)
+            else:
+                st.caption(
+                    "Run completed but no additional structured output was extracted. Check the ADK Web UI for details."
+                )
+
         st.caption(
             f"Latest session: `{run_state['session_id']}` · [Open in ADK Web ↗]({run_state['ui_link']})"
         )
@@ -669,7 +804,10 @@ if submitted:
             session_url = _session_endpoints(agent_key, user_id, session_id)
             ui_link = f"{ADK_BASE_URL}/dev-ui/?app={agent_key}&session={session_id}"
 
-            sse_container = st.expander("Live SSE messages from /run_sse", expanded=False)
+            if agent_key == "market_trends_analyst":
+                sse_container = nullcontext()
+            else:
+                sse_container = st.expander("Live SSE messages from /run_sse", expanded=False)
             started, sse_messages, sse_errors = run_agent_with_messages(
                 agent_key,
                 user_id,
@@ -737,13 +875,14 @@ if run_state:
         help="Errors surfaced while consuming the SSE stream.",
     )
 
-    st.markdown("**Agent Summary**")
-    if run_state.get("final_summary"):
-        st.success(run_state["final_summary"])
-    else:
-        st.caption(
-            "No final summary detected yet — open the session in ADK Web UI for details."
-        )
+    if agent_key != "market_trends_analyst":
+        st.markdown("**Agent Summary**")
+        if run_state.get("final_summary"):
+            st.success(run_state["final_summary"])
+        else:
+            st.caption(
+                "No final summary detected yet — open the session in ADK Web UI for details."
+            )
 
     if run_state.get("sse_errors"):
         st.warning("\n".join(run_state["sse_errors"]))
