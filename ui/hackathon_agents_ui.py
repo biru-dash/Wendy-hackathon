@@ -1,6 +1,8 @@
 import json
+import re
 import time
 from contextlib import nullcontext
+from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
 import requests
@@ -24,7 +26,7 @@ AGENT_METADATA = {
         "overview_md": """
 ### What does this agent do?
 - Acts like a **Market Research Analyst**.
-- Scans articles, blogs, and social channels to surface emerging breakfast trends and consumer signals.
+- Scans articles, blogs, datasets, and social channels to surface emerging trends and consumer signals.
 - Supplies these insights to downstream teams (Customer Insights, Offer Design, Orchestrator).
 - In real life, market research analysts continuously track consumer behavior, competitor moves, and macro signals, then package the takeaways for marketing and product teams—this agent emulates that end-to-end loop programmatically.
 
@@ -53,7 +55,7 @@ Input prompt → Data Collection Agent → Research Synthesis Agent → Trend br
 - External market scanning: breakfast trends, Gen Z preferences, Q1 seasonal signals.
 """,
         "testing_intro": """
-1. Pick a focused breakfast/Gen Z prompt.
+1. Choose one of the example prompts below or craft your own scenario-specific prompt.
 2. Run the agent and watch the SSE feed and event timeline.
 3. Open the linked session in ADK Web UI to inspect the trace and events.
 4. Tweak instructions/tools, rerun, and compare improvements.
@@ -71,8 +73,8 @@ Input prompt → Data Collection Agent → Research Synthesis Agent → Trend br
         "overview_md": """
 ### What does this agent do?
 - Mirrors a **Customer Insights Analyst / Data Scientist**.
-- Mines transactional and feedback data to understand Gen Z breakfast behaviours, sentiment, and segment profiles.
-- Provides internal context that complements Market Trends outputs.
+- Mines transactional and feedback data to understand target audience behaviours, sentiment, and segment profiles.
+- Provides internal context that complements broader market research outputs.
 
 ### How does it achieve this?
 1. **Behavioral Analysis Agent** queries BigQuery (via `crm_database_tool`) for breakfast visit patterns, spend, and redemption metrics.
@@ -120,7 +122,7 @@ Input prompt → Behavioral Analysis (parallel) → Sentiment Analysis (parallel
         "overview_md": """
 ### What does this agent do?
 - Acts like a **Marketing Strategist / Offer Design Manager**.
-- Combines market trends, customer insights, and (optionally) competitor intel to propose breakfast offers aimed at Gen Z.
+- Combines market trends, customer insights, and (optionally) competitor intel to propose offers tailored to the defined audience or mission.
 - Produces prioritized concepts with rationale and feasibility notes.
 
 ### How does it achieve this?
@@ -161,7 +163,7 @@ Simplified Offer Design Agent → Offer ideas → Rationale / Feasibility / Impa
         "overview_md": """
 ### What does this agent do?
 - Plays the role of a **Marketing Director / Campaign Manager**.
-- Orchestrates Market Trends, Customer Insights, and Offer Design in sequence to deliver final breakfast offers for Gen Z.
+- Orchestrates Market Trends, Customer Insights, and Offer Design in sequence to deliver final offers or activation plans.
 - Represents the full end-to-end workflow described in the hackathon.
 
 ### How does it achieve this?
@@ -203,7 +205,7 @@ User prompt → Market Trends → Customer Insights → Offer Design → Final o
         "overview_md": """
 ### What does this agent do?
 - Mirrors a **Competitive Intelligence Lead**.
-- Researches breakfast-focused campaigns from rival QSR brands targeting Gen Z.
+- Researches campaigns, positioning moves, and strategic bets from relevant competitors.
 - Surfaces whitespace opportunities that can be fed into Offer Design and the orchestrated workflow.
 
 ### How does it achieve this?
@@ -252,6 +254,7 @@ Prompt → Target Identification → Research Orchestrator → Competitor Analys
 }
 
 AGENT_CHOICES = {meta["title"]: key for key, meta in AGENT_METADATA.items()}
+AGENT_TITLES = list(AGENT_CHOICES.keys())
 UNCHANGED_POLL_LIMIT = 3
 
 # ---------------------------------------------------------------------------
@@ -434,6 +437,41 @@ def poll_session_for_data(agent_name: str, user_id: str, session_id: str, status
     return final_summary, collected_events, raw_session
 
 
+def restore_session_state(agent_name: str, user_id: str, session_id: str):
+    session_url = _session_endpoints(agent_name, user_id, session_id)
+    try:
+        response = requests.get(session_url, timeout=30)
+        response.raise_for_status()
+    except requests.exceptions.RequestException:
+        return None
+
+    raw_session = response.json()
+    events = raw_session.get("events", [])
+    final_summary = _extract_final_model_text(events) or ""
+
+    user_prompt = ""
+    for event in events:
+        if not isinstance(event, dict):
+            continue
+        if (event.get("role") or "").lower() == "user":
+            user_texts = _extract_text_blocks(event)
+            if user_texts:
+                user_prompt = user_texts[0].strip()
+                break
+
+    return {
+        "session_id": session_id,
+        "session_url": session_url,
+        "ui_link": f"{ADK_BASE_URL}/dev-ui/?app={agent_name}&session={session_id}",
+        "query": user_prompt,
+        "sse_messages": [],
+        "sse_errors": [],
+        "events": events,
+        "final_summary": final_summary if final_summary else None,
+        "raw_session": raw_session,
+    }
+
+
 def _event_id(event: Dict) -> str:
     return str(event.get("id") or event.get("eventId") or hash(str(event)))
 
@@ -579,6 +617,8 @@ def _render_market_trends_summary(summary: str):
                             st.markdown("**Recommended directions:**")
                             st.markdown(recommendations)
 
+    _render_executive_summary(summary)
+
 
 def _parse_sse_payload(message: str):
     try:
@@ -668,6 +708,51 @@ def _parse_offer_concepts(texts: List[str]) -> List[Tuple[str, str]]:
     return offers
 
 
+def _render_executive_summary(summary: str) -> bool:
+    if not summary:
+        return False
+
+    pattern = re.compile(r"### \*\*Executive Summary: (?P<title>.+?)\*\*", re.IGNORECASE)
+    match = pattern.search(summary)
+
+    if not match:
+        return False
+
+    title = match.group("title").strip()
+    st.subheader(f"Executive Summary — {title}")
+
+    remainder = summary[match.end() :].strip()
+    if not remainder:
+        return True
+
+    sections = [section.strip() for section in remainder.split("\n\n") if section.strip()]
+    for section in sections:
+        if section.startswith("**"):
+            st.markdown(section)
+            continue
+
+        if re.match(r"^\d+\.\s", section):
+            bullet_lines = []
+            for line in section.splitlines():
+                line = line.strip()
+                if not line:
+                    continue
+                if re.match(r"^\d+\.\s", line):
+                    bullet_lines.append(f"- {re.sub(r'^\d+\.\s*', '', line)}")
+                else:
+                    bullet_lines.append(f"  {line}")
+            st.markdown("\n".join(bullet_lines))
+            continue
+
+        if section.startswith("*"):
+            st.markdown(section)
+            continue
+
+        st.write(section)
+
+    return True
+
+
 # ---------------------------------------------------------------------------
 # Streamlit UI
 # ---------------------------------------------------------------------------
@@ -677,15 +762,45 @@ st.set_page_config(page_title="Hackathon Agent Console", layout="wide")
 if "agent_runs" not in st.session_state:
     st.session_state.agent_runs = {}
 
+query_params = st.query_params
+agent_param = query_params.get("agent")
+default_agent_key = agent_param if isinstance(agent_param, str) else None
+if default_agent_key not in AGENT_METADATA:
+    default_agent_key = list(AGENT_METADATA.keys())[0]
+
+default_agent_title = AGENT_METADATA[default_agent_key]["title"]
+default_index = AGENT_TITLES.index(default_agent_title)
+
 st.sidebar.header("Select agent to explore")
-agent_title = st.sidebar.selectbox("Agent", list(AGENT_CHOICES.keys()))
+agent_title = st.sidebar.selectbox("Agent", AGENT_TITLES, index=default_index)
 agent_key = AGENT_CHOICES[agent_title]
 metadata = AGENT_METADATA[agent_key]
 user_id = metadata.get("user_id", DEFAULT_USER_ID)
 
-st.title(f"🧪 {metadata['title']} — Hackathon Testing Console")
+if query_params.get("agent") != agent_key:
+    st.query_params["agent"] = agent_key
 
 run_state = st.session_state.agent_runs.get(agent_key)
+
+if not run_state:
+    session_param = query_params.get("session")
+    if isinstance(session_param, str):
+        restored_state = restore_session_state(agent_key, user_id, session_param)
+        if restored_state:
+            st.session_state.agent_runs[agent_key] = restored_state
+            run_state = restored_state
+        else:
+            if "session" in st.query_params:
+                del st.query_params["session"]
+
+if run_state:
+    if query_params.get("session") != run_state["session_id"]:
+        st.query_params["session"] = run_state["session_id"]
+else:
+    if "session" in st.query_params:
+        del st.query_params["session"]
+
+st.title(f"🧪 {metadata['title']} — Hackathon Testing Console")
 
 overview_tab, testing_tab, results_tab = st.tabs([
     "Overview & Prerequisites",
@@ -717,6 +832,48 @@ with st.sidebar:
     st.write(f"Agent: `{agent_key}`")
     st.write(f"User ID: `{user_id}`")
     st.caption("Override in `AGENT_METADATA` if your environment differs.")
+
+    image_dir = Path("img")
+    image_files = sorted(
+        path for path in image_dir.glob("*") if path.is_file()
+    )
+    priority_order = [
+        "tiger-analytics.png",
+        "Wendy's_full_logo_2012.svg.png",
+        "Google_Cloud_logo.svg.png",
+    ]
+    ordered_images: List[Path] = []
+    for name in priority_order:
+        for image_path in image_files:
+            if image_path.name == name and image_path not in ordered_images:
+                ordered_images.append(image_path)
+                break
+    for image_path in image_files:
+        if image_path not in ordered_images:
+            ordered_images.append(image_path)
+    if image_files:
+        st.markdown(
+            """
+            <style>
+                [data-testid="stSidebar"] [data-testid="stImage"] img {
+                    width: 30%;
+                    max-height: 40px;
+                    object-fit: contain;
+                    margin-left: auto;
+                    margin-right: auto;
+                }
+                [data-testid="stSidebar"] [data-testid="stImage"] img[alt="Google_Cloud_logo.svg.png"] {
+                    width: 15%;
+                    max-height: 20px;
+                }
+            </style>
+            """,
+            unsafe_allow_html=True,
+        )
+        st.divider()
+        st.subheader("In collaboration with")
+        for image_file in ordered_images:
+            st.image(str(image_file), use_container_width=True)
 
 with testing_tab:
     st.markdown(metadata["testing_intro"])
@@ -758,8 +915,10 @@ with results_tab:
                 )
         else:
             if final_summary_text:
-                st.subheader("Executive Summary")
-                st.markdown(final_summary_text)
+                rendered = _render_executive_summary(final_summary_text)
+                if not rendered:
+                    st.subheader("Executive Summary")
+                    st.markdown(final_summary_text)
 
             generated_outputs = _collect_generated_outputs(run_state)
             if final_summary_text:
@@ -838,6 +997,7 @@ if submitted:
                     "raw_session": raw_session,
                 }
                 run_state = st.session_state.agent_runs[agent_key]
+                st.rerun()
             else:
                 status.update(label="Agent run failed to start. See error above.", state="error")
                 st.session_state.agent_runs[agent_key] = {
@@ -852,6 +1012,7 @@ if submitted:
                     "raw_session": None,
                 }
                 run_state = st.session_state.agent_runs[agent_key]
+                st.rerun()
         else:
             st.error("Agent run could not be started. See details above.")
 
