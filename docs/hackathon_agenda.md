@@ -40,11 +40,9 @@ Participants will modify and enhance Wendy's multi-agent AI system by updating a
 Clone the repository to your local machine:
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/biru-dash/Wendy-hackathon.git
 cd Wendy-hackathon
 ```
-
-Replace `<repository-url>` with the actual repository URL provided by organizers.
 
 ### Environment Setup
 
@@ -54,6 +52,7 @@ Replace `<repository-url>` with the actual repository URL provided by organizers
 
 ```powershell
 # Create virtual environment
+# If `python` is not recognized, try `py -m venv venv`
 python -m venv venv
 
 # Activate virtual environment (Windows PowerShell)
@@ -63,7 +62,7 @@ python -m venv venv
 # Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 
 # Install dependencies
-pip install google-adk google-cloud-aiplatform google-cloud-bigquery
+pip install google-adk google-cloud-aiplatform google-cloud-bigquery streamlit
 
 # Authenticate with Google Cloud
 # This will open a browser window - use your Wendy's email to sign in
