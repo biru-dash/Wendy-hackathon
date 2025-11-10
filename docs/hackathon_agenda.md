@@ -5,7 +5,7 @@
 
 ## Overview
 
-Participants will modify and enhance Wendy's multi-agent AI system by updating agent instructions, tools, and models. The system uses Market Trends Analyst and Customer Insights agents to generate offer concepts.
+Participants will modify and enhance Wendy's multi-agent AI system by updating agent instructions, tools, and models. The system relies on five collaborating agents—Market Trends Analyst, Customer Insights, Competitor Intelligence, Offer Design, and the Marketing Orchestrator—to deliver finalized offer recommendations.
 
 ## Hackathon Goal
 
@@ -26,14 +26,6 @@ Participants will modify and enhance Wendy's multi-agent AI system by updating a
 
 **Task**: Modify generic instructions and tools to align with this goal.
 
-## Schedule
-
-| Time | Activity |
-|------|----------|
-| 10:30 - 10:40 AM | Setup (10 min) |
-| 10:40 - 11:15 AM | System Overview and Testing (35 min) |
-| 11:15 - 11:45 AM | Agent Modifications (30 min) |
-| 11:45 - 12:00 PM | Demos & Evaluation (15 min) |
 
 ## Setup (10:30 - 10:40 AM)
 
@@ -41,7 +33,7 @@ Participants will modify and enhance Wendy's multi-agent AI system by updating a
 
 - Python 3.10+
 - Google Cloud SDK (`gcloud`) installed and authenticated
-- Access to `cdp-tst-5fba` Google Cloud project
+- Access to `dma-agentspace-dev-6cd2` Google Cloud project
 - Git installed
 
 ### Clone Repository
@@ -89,6 +81,9 @@ Copy-Item .env.example .env
 
 # Launch ADK Web Server
 adk web src
+
+# In a second terminal, start the Streamlit testing console
+streamlit run ui/hackathon_agents_ui.py
 ```
 
 **Windows Alternative** (if PowerShell activation doesn't work):
@@ -124,16 +119,19 @@ cp .env.example .env
 
 # Launch ADK Web Server
 adk web src
+
+# In a second terminal, start the Streamlit testing console
+streamlit run ui/hackathon_agents_ui.py
 ```
 
 ### System Components
 
-- Multi-Agent System: Market Trends Analyst, Customer Insights, Offer Design
+- Multi-Agent System: Market Trends Analyst, Customer Insights, Competitor Intelligence, Offer Design, Marketing Orchestrator
 - ADK Web Interface: Testing and debugging interface
+- Streamlit Console (`ui/hackathon_agents_ui.py`): Guided testing console for all agents
 - Instruction Files: Text files controlling agent behavior
 - Tools: Python functions available to agents
 - BigQuery Datasets: Customer data (read-only access)
-- Advanced Path: Competitor Intelligence (optional, commented out by default)
 
 ## System Overview and Testing (10:40 - 11:15 AM)
 
@@ -172,8 +170,8 @@ ADK Web is the interface you'll use to interact with and test the multi-agent sy
 - Click on nodes in the trace to see agent details
 
 **Agent Selection**:
-- Use the dropdown at the top to select which agent to test
-- Start with individual agents (`market_trends_analyst`, `customer_insights`) to understand each component
+- Use the dropdown at the top to select which agent to test (agents are numbered 1-5 to match the orchestrated flow)
+- Start with individual agents (`market_trends_analyst`, `customer_insights`, `competitor_intelligence`, `offer_design`) to understand each component
 - Then test the full system with `marketing_orchestrator`
 
 ### 1. Market Trends Analyst
@@ -418,10 +416,10 @@ Step 1: Market Trends Analyst → breakfast trend_briefs[] (Gen Z, Q1 focused)
   ↓
 Step 2: Customer Insights → Gen Z breakfast customer_insights, segment_profiles
   ↓
-Step 3: Offer Design → 3 prioritized breakfast offer_concepts[] (final output)
+Step 3: Competitor Intelligence → competitor insights, whitespace opportunities
+  ↓
+Step 4: Offer Design → 3 prioritized breakfast offer_concepts[] (final output)
 ```
-
-**Note**: Competitor Intelligence is commented out by default. See "Advanced Path" section to enable.
 
 **How It All Comes Together**:
 
@@ -437,14 +435,16 @@ This mimics how a real marketing department works: Research teams gather informa
 1. In ADK Web, select `marketing_orchestrator` from the agent dropdown
 2. Run the **full goal query** (this is what the orchestrator is designed for):
    - **Query**: "Develop three innovative offers to increase breakfast traffic among Gen Z customers during Q1 (January-March) breakfast hours (6am-11am)"
-3. Observe the trace showing the full 3-step workflow:
+3. Observe the trace showing the full 4-step workflow:
    - **Step 1**: Watch Market Trends Analyst execute first - notice it breaks down the query to focus on market research aspects
-   - **Step 2**: See Customer Insights run - notice how it focuses on customer data analysis aspects (parallel sub-agents)
-   - **Step 3**: Watch Offer Design receive all inputs (trends + insights) and generate final output
+  - **Step 2**: See Customer Insights run - notice how it focuses on customer data analysis aspects (behavioral metrics)
+  - **Step 3**: Watch Competitor Intelligence surface whitespace opportunities from rival campaigns
+  - **Step 4**: Watch Offer Design receive all inputs (trends + insights + competitor gaps) and generate final output
 4. Analyze events to see data transformation at each step:
    - Market Trends outputs → become inputs for Offer Design
-   - Customer Insights outputs → become inputs for Offer Design
-   - Offer Design combines everything → final prioritized offers
+  - Customer Insights outputs → flow into Competitor Intelligence context
+  - Competitor Intelligence outputs → feed Offer Design alongside trends and customer metrics
+  - Offer Design combines everything → final prioritized offers
 5. Notice how the orchestrator automatically:
    - Breaks down the high-level query into appropriate sub-queries for each agent
    - Passes outputs from one agent as inputs to the next
@@ -719,21 +719,11 @@ We've created example instruction templates to help you improve agents:
 - Evidence citation requirements
 - Business context and rationale
 
-### Advanced Path: Competitor Intelligence (Optional)
+### Advanced Path: Deepen Competitor Intelligence
 
-To enable Competitor Intelligence:
+Competitor Intelligence now runs by default in the orchestrator flow. Use this path if you want to push the competitive analysis further (more precise targets, richer comparisons).
 
-#### Step 1: Enable
-
-1. Open: `src/marketing_orchestrator/agent.py`
-2. Uncomment:
-   ```python
-   from src.competitor_intelligence.agent import competitor_intel_manager_agent
-   ```
-3. In sub_agents list, uncomment: `competitor_intel_manager_agent,`
-4. Restart ADK Web Server: Stop server (Ctrl+C), run `adk web src` again
-
-#### Step 2: Competitor Intelligence Agents
+#### Step 1: Review Current Agent Chain
 
 **Root Agent**: `CompetitorIntelManagerAgent` (SequentialAgent)
 
@@ -758,7 +748,7 @@ To enable Competitor Intelligence:
    - Role: Identifies opportunities where Wendy's can compete
    - File: `src/competitor_intelligence/sub_agents/whitespace_synthesizer/instruction.txt`
 
-#### Step 3: Improve Competitor Intelligence Instructions
+#### Step 2: Improve Competitor Intelligence Instructions
 
 1. Open: `src/competitor_intelligence/sub_agents/competitor_analysis/instruction.txt`
 2. Review Hackathon Challenge
@@ -771,17 +761,11 @@ To enable Competitor Intelligence:
 4. Test with fixed goal query
 5. Verify improved focus on breakfast and Gen Z competitive strategies
 
-#### Step 4: Test Full Workflow
+#### Step 3: Test Full Workflow Impact
 
-With Competitor Intelligence enabled, workflow becomes:
-```
-Step 1: Market Trends Analyst → trend_briefs[]
-Step 2: Customer Insights → customer_insights, segment_profiles
-Step 3: Competitor Intelligence → whitespace_opportunities[]
-Step 4: Offer Design → 3 prioritized offer_concepts[]
-```
-
-**Note**: This adds an additional step, increasing execution time. Only enable if time permits and competitive intelligence is required for final output.
+1. Run `marketing_orchestrator` with the fixed goal query.
+2. Compare competitor insights before/after your instruction updates.
+3. Check whether Offer Design references competitive whitespace in the final concepts.
 
 ### Task 2: Experiment with Models (10 min)
 
@@ -973,12 +957,11 @@ BigQuery datasets contain customer data:
 **Core Agents**:
 1. Market Trends Analyst - Research online trends
 2. Customer Insights - Analyze customer data
-3. Offer Design - Create offer concepts
+3. Competitor Intelligence - Surface rival moves and whitespace
+4. Offer Design - Create offer concepts
+5. Marketing Orchestrator - Runs the full workflow
 
-**Advanced Path**:
-- Competitor Intelligence - Research competitors (commented out by default)
-
-**Recommendation**: Start with Market Trends and Customer Insights. These provide the foundation for offer design. Enable Competitor Intelligence only if time permits and competitive gaps are required in final output.
+**Recommendation**: Start by validating Market Trends and Customer Insights outputs, then inspect Competitor Intelligence before running Offer Design and the full Marketing Orchestrator flow.
 
 ---
 

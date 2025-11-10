@@ -16,7 +16,7 @@ Multi-agent AI system for generating data-driven promotional offers at Wendy's. 
 
 - Python 3.10+
 - Google Cloud SDK (`gcloud`) installed and authenticated
-- Access to `cdp-tst-5fba` Google Cloud project
+- Access to `dma-agentspace-dev-6cd2` Google Cloud project
 - Git installed
 
 ### Clone Repository
@@ -64,6 +64,9 @@ Copy-Item .env.example .env
 
 # Launch ADK Web Server
 adk web src
+
+# In a second terminal, start the Streamlit testing console
+streamlit run ui/hackathon_agents_ui.py
 ```
 
 **Windows Alternative** (if PowerShell activation doesn't work):
@@ -99,13 +102,17 @@ cp .env.example .env
 
 # Launch ADK Web Server
 adk web src
+
+# In a second terminal, start the Streamlit testing console
+streamlit run ui/hackathon_agents_ui.py
 ```
 
 ### Access ADK Web Interface
 
 1. Open browser to `http://localhost:8000`
-2. Select "marketing_orchestrator" from agent dropdown menu
-3. Enter your query in the chat interface
+2. Keep the Streamlit console running at the same time, available at the URL Streamlit prints (typically `http://localhost:8501`)
+3. In ADK Web, select an agent (e.g., `marketing_orchestrator`) from the dropdown menu
+4. Enter your query in the chat interface
 
 **Example Query**: "Develop three innovative offers to increase breakfast traffic among Gen Z customers during Q1 (January-March) breakfast hours (6am-11am)"
 
@@ -203,8 +210,8 @@ Input Query → Data Collection (finds URLs) → Research Synthesis (analyzes co
 - **Root Agent**: `CustomerInsightsManagerAgent` (ParallelAgent)
 - **Sub-Agents**:
   1. **Behavioral Analysis Agent** - Analyzes numerical data (redemptions, visits, spend)
-  2. **Sentiment Analysis Agent** - Analyzes text feedback (reviews, comments)
-  3. **Profile Synthesizer Agent** - Combines quantitative and qualitative insights
+  2. **Profile Synthesizer Agent** - Summarizes behavioral metrics into segment profiles
+- Optional: **Sentiment Analysis Agent** can be enabled for qualitative feedback mining
 
 **Workflow**:
 ```
@@ -212,7 +219,19 @@ Input Query → Behavioral Analysis (parallel) → Profile Synthesizer → Custo
               Sentiment Analysis (parallel)
 ```
 
-### 3. Offer Design
+### 3. Competitor Intelligence
+
+**Function**: Research competitor campaigns, pricing moves, and whitespace opportunities
+
+**Structure**:
+- **Root Agent**: `CompetitorIntelManagerAgent` (SequentialAgent)
+- **Sub-Agents**:
+  1. **Target Identification Agent** - Selects competitors to investigate
+  2. **Research Orchestrator Agent** - Coordinates deeper competitor dives
+  3. **Competitor Analysis Agent** - Summarizes competitor findings
+  4. **Whitespace Synthesizer Agent** - Highlights differentiation opportunities
+
+### 4. Offer Design
 
 **Function**: Synthesizes research into actionable offer concepts
 
@@ -221,7 +240,7 @@ Input Query → Behavioral Analysis (parallel) → Profile Synthesizer → Custo
 - **Input**: Market trends, customer insights
 - **Output**: 3 prioritized offer concepts
 
-### 4. Marketing Orchestrator (Root Agent)
+### 5. Marketing Orchestrator (Root Agent)
 
 **Function**: Coordinates all teams in sequence
 
@@ -233,10 +252,12 @@ Step 1: Market Trends Analyst → trend_briefs[]
   ↓
 Step 2: Customer Insights → customer_insights, segment_profiles
   ↓
-Step 3: Offer Design → 3 prioritized offer_concepts[] (final output)
+Step 3: Competitor Intelligence → competitor_insights, whitespace gaps
+  ↓
+Step 4: Offer Design → 3 prioritized offer_concepts[] (final output)
 ```
 
-**Note**: Competitor Intelligence is commented out by default. See hackathon agenda for advanced path.
+**Note**: Competitor Intelligence now runs in the default orchestrator flow. You can still toggle it off by removing it from `marketing_orchestrator/agent.py` if needed.
 
 ## System Architecture
 
