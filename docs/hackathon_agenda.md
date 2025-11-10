@@ -26,7 +26,6 @@ Participants will modify and enhance Wendy's multi-agent AI system by updating a
 
 **Task**: Modify generic instructions and tools to align with this goal.
 
-
 ## Setup (10:30 - 10:40 AM)
 
 ### Prerequisites
@@ -69,15 +68,6 @@ pip install google-adk google-cloud-aiplatform google-cloud-bigquery
 # Authenticate with Google Cloud
 # This will open a browser window - use your Wendy's email to sign in
 gcloud auth application-default login
-
-# (Optional) Set Google Cloud project for gcloud commands
-# Note: This is optional - your .env file will set the project for the agents
-# If you get a password prompt, you can skip this step
-# gcloud config set project cdp-tst-5fba
-
-# Configure environment variables
-Copy-Item .env.example .env
-# Edit .env file with your GCP project details (project ID, project number, dataset name)
 
 # Launch ADK Web Server
 adk web src

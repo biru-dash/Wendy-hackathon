@@ -14,6 +14,20 @@ CRM_TABLE_SCHEMA = [
     bigquery.SchemaField("total_lifetime_spend", "FLOAT", mode="NULLABLE"),
 ]
 
+CUSTOMER_TRANSACTIONS_RAW_SCHEMA = [
+    bigquery.SchemaField("transaction_id", "STRING", mode="REQUIRED"),
+    bigquery.SchemaField("customer_id", "STRING", mode="REQUIRED"),
+    bigquery.SchemaField("segment_id", "STRING", mode="REQUIRED"),
+    bigquery.SchemaField("transaction_date", "TIMESTAMP", mode="REQUIRED"),
+    bigquery.SchemaField("total_spend", "FLOAT", mode="REQUIRED"),
+    bigquery.SchemaField("channel", "STRING", mode="REQUIRED"),
+    bigquery.SchemaField("redeemed_offer", "STRING", mode="NULLABLE"),
+    bigquery.SchemaField("offer_type", "STRING", mode="NULLABLE"),
+    bigquery.SchemaField("payment_method", "STRING", mode="NULLABLE"),
+    bigquery.SchemaField("items", "STRING", mode="REPEATED"),
+    bigquery.SchemaField("visit_daypart", "STRING", mode="NULLABLE"),
+]
+
 REDEMPTION_LOGS_TABLE_SCHEMA = [
     bigquery.SchemaField("redemption_id", "STRING", mode="REQUIRED"),
     bigquery.SchemaField("customer_id", "STRING", mode="REQUIRED"),
@@ -43,12 +57,39 @@ FEEDBACK_TABLE_SCHEMA = [
     bigquery.SchemaField("source", "STRING", mode="NULLABLE"),
 ]
 
+CUSTOMER_FEEDBACK_RAW_SCHEMA = [
+    bigquery.SchemaField("feedback_id", "STRING", mode="REQUIRED"),
+    bigquery.SchemaField("customer_id", "STRING", mode="REQUIRED"),
+    bigquery.SchemaField("segment_id", "STRING", mode="NULLABLE"),
+    bigquery.SchemaField("feedback_date", "TIMESTAMP", mode="REQUIRED"),
+    bigquery.SchemaField("rating", "INTEGER", mode="REQUIRED"),
+    bigquery.SchemaField("feedback_text", "STRING", mode="REQUIRED"),
+    bigquery.SchemaField("channel", "STRING", mode="NULLABLE"),
+    bigquery.SchemaField("source", "STRING", mode="NULLABLE"),
+]
+
+CUSTOMER_SEGMENTS_SCHEMA = [
+    bigquery.SchemaField("segment_id", "STRING", mode="REQUIRED"),
+    bigquery.SchemaField("description", "STRING", mode="NULLABLE"),
+    bigquery.SchemaField("preferred_mechanics", "STRING", mode="REPEATED"),
+    bigquery.SchemaField("key_messaging_phrases", "STRING", mode="REPEATED"),
+    bigquery.SchemaField("redemption_rate", "FLOAT", mode="NULLABLE"),
+    bigquery.SchemaField("lift_estimate", "FLOAT", mode="NULLABLE"),
+    bigquery.SchemaField("empirical_metrics", "STRING", mode="NULLABLE"),
+    bigquery.SchemaField("created_at", "TIMESTAMP", mode="NULLABLE"),
+]
+
 # Table configuration
 TABLE_CONFIGS = {
     "crm_data": {
         "schema": CRM_TABLE_SCHEMA,
         "description": "CRM and loyalty customer visit data",
         "table_id": "crm_data",
+    },
+    "customer_transactions_raw": {
+        "schema": CUSTOMER_TRANSACTIONS_RAW_SCHEMA,
+        "description": "Raw transactional records with offer redemptions",
+        "table_id": "customer_transactions_raw",
     },
     "redemption_logs": {
         "schema": REDEMPTION_LOGS_TABLE_SCHEMA,
@@ -59,5 +100,15 @@ TABLE_CONFIGS = {
         "schema": FEEDBACK_TABLE_SCHEMA,
         "description": "Customer feedback, reviews, and sentiment data",
         "table_id": "feedback_data",
+    },
+    "customer_feedback_raw": {
+        "schema": CUSTOMER_FEEDBACK_RAW_SCHEMA,
+        "description": "Raw customer feedback verbatims with ratings",
+        "table_id": "customer_feedback_raw",
+    },
+    "customer_segments": {
+        "schema": CUSTOMER_SEGMENTS_SCHEMA,
+        "description": "Synthesized customer segment insights",
+        "table_id": "customer_segments",
     },
 }

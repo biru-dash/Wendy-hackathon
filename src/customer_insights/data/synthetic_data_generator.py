@@ -1,7 +1,9 @@
 """Generate synthetic customer insights data for BigQuery"""
+import json
 import random
 from datetime import datetime, timedelta
 from typing import List, Dict, Any
+
 import pandas as pd
 
 # Segment definitions
@@ -17,6 +19,7 @@ SEGMENTS = [
 OFFER_TYPES = ["BOGO", "Percentage Off", "Free Item", "Bundle Deal", "Time-Boxed", "App Exclusive"]
 CHANNELS = ["app", "web", "in-store", "drive-thru"]
 MENU_ITEMS = ["Baconator", "Spicy Chicken Sandwich", "Frosty", "Fries", "Nuggets", "Salad"]
+PAYMENT_METHODS = ["credit_card", "debit_card", "mobile_pay", "cash"]
 
 def generate_crm_data(num_customers: int = 1000) -> List[Dict[str, Any]]:
     """Generate synthetic CRM and loyalty data"""
@@ -224,6 +227,167 @@ def generate_feedback_data(num_reviews: int = 2000) -> List[Dict[str, Any]]:
     return data
 
 
+def generate_customer_transactions_raw(crm_df: pd.DataFrame, redemption_df: pd.DataFrame) -> pd.DataFrame:
+    """Create raw transaction records derived from CRM visits."""
+    transactions_df = crm_df.copy()
+    transactions_df["transaction_date"] = pd.to_datetime(transactions_df["visit_date"])
+    transactions_df["transaction_id"] = [
+        f"txn_{i+1:07d}" for i in range(len(transactions_df))
+    ]
+    transactions_df["total_spend"] = transactions_df["spend"]
+
+    offers_by_customer = redemption_df.groupby("customer_id")["offer_type"].apply(list).to_dict()
+
+    def pick_offer(customer_id: str) -> str:
+        offers = offers_by_customer.get(customer_id)
+        if offers and random.random() < 0.65:
+            return random.choice(offers)
+        if random.random() < 0.25:
+            return random.choice(OFFER_TYPES)
+        return None
+
+    transactions_df["redeemed_offer"] = transactions_df["customer_id"].apply(pick_offer)
+    transactions_df["offer_type"] = transactions_df["redeemed_offer"].fillna(
+        transactions_df["segment_id"].map(lambda _: random.choice(OFFER_TYPES))
+    )
+    transactions_df["payment_method"] = [
+        random.choice(PAYMENT_METHODS) for _ in range(len(transactions_df))
+    ]
+    transactions_df["items"] = [
+        random.sample(MENU_ITEMS, k=random.randint(1, min(3, len(MENU_ITEMS))))
+        for _ in range(len(transactions_df))
+    ]
+
+    def determine_daypart(timestamp: pd.Timestamp) -> str:
+        hour = timestamp.hour
+        if 6 <= hour < 11:
+            return "breakfast"
+        if 11 <= hour < 15:
+            return "lunch"
+        if 15 <= hour < 18:
+            return "afternoon"
+        if 18 <= hour < 22:
+            return "dinner"
+        return "late-night"
+
+    transactions_df["visit_daypart"] = transactions_df["transaction_date"].apply(determine_daypart)
+
+    return transactions_df[
+        [
+            "transaction_id",
+            "customer_id",
+            "segment_id",
+            "transaction_date",
+            "total_spend",
+            "channel",
+            "redeemed_offer",
+            "offer_type",
+            "payment_method",
+            "items",
+            "visit_daypart",
+        ]
+    ]
+
+
+def generate_customer_feedback_raw(feedback_df: pd.DataFrame) -> pd.DataFrame:
+    """Create raw feedback verbatims with integer ratings."""
+    feedback_raw = feedback_df.copy()
+    feedback_raw["feedback_text"] = feedback_raw["review_text"]
+
+    def derive_rating(sentiment_score: float) -> int:
+        noisy_score = sentiment_score + random.uniform(-0.15, 0.15)
+        rating = max(1, min(5, int(round(noisy_score * 5))))
+        return rating
+
+    feedback_raw["rating"] = feedback_raw["sentiment_score"].apply(derive_rating)
+
+    return feedback_raw[
+        [
+            "feedback_id",
+            "customer_id",
+            "segment_id",
+            "feedback_date",
+            "rating",
+            "feedback_text",
+            "channel",
+            "source",
+        ]
+    ]
+
+
+def generate_customer_segments(
+    crm_df: pd.DataFrame,
+    transactions_df: pd.DataFrame,
+    redemption_df: pd.DataFrame,
+    feedback_df: pd.DataFrame,
+) -> pd.DataFrame:
+    """Aggregate synthesized metrics by segment for initial seed data."""
+    segments = []
+
+    for segment in SEGMENTS:
+        crm_segment = crm_df[crm_df["segment_id"] == segment]
+        if crm_segment.empty:
+            continue
+
+        transactions_segment = transactions_df[transactions_df["segment_id"] == segment]
+        redemption_segment = redemption_df[redemption_df["segment_id"] == segment]
+        feedback_segment = feedback_df[feedback_df["segment_id"] == segment]
+
+        visits_per_customer = (
+            crm_segment.groupby("customer_id")["visit_date"].count().mean()
+            if not crm_segment.empty
+            else 0
+        )
+        avg_spend = crm_segment["spend"].mean() if not crm_segment.empty else 0
+        transaction_count = len(transactions_segment) or 1
+        redemption_rate = len(redemption_segment) / transaction_count
+        lift_estimate = redemption_segment["lift_multiplier"].mean() if not redemption_segment.empty else 1.0
+
+        top_channels = (
+            crm_segment["channel"].value_counts().head(2).index.tolist()
+            if "channel" in crm_segment
+            else []
+        )
+        preferred_mechanics = (
+            redemption_segment["offer_type"].value_counts().head(3).index.tolist()
+            if not redemption_segment.empty
+            else random.sample(OFFER_TYPES, k=3)
+        )
+
+        phrases = []
+        if not feedback_segment.empty and "key_phrases" in feedback_segment:
+            for value in feedback_segment["key_phrases"]:
+                phrases.extend(value if isinstance(value, list) else [value])
+        key_messaging_phrases = pd.Series(phrases).value_counts().head(5).index.tolist() if phrases else []
+
+        description = (
+            f"{segment.replace('-', ' ').title()} segment averaging ${avg_spend:0.2f} per visit "
+            f"and {visits_per_customer:0.1f} visits per month."
+        )
+
+        empirical_metrics = {
+            "avg_monthly_visits": round(visits_per_customer or 0, 1),
+            "avg_spend": round(avg_spend or 0, 2),
+            "segment_size": len(crm_segment["customer_id"].unique()),
+            "top_channels": top_channels,
+        }
+
+        segments.append(
+            {
+                "segment_id": segment,
+                "description": description,
+                "preferred_mechanics": preferred_mechanics,
+                "key_messaging_phrases": key_messaging_phrases,
+                "redemption_rate": round(redemption_rate, 3),
+                "lift_estimate": round(lift_estimate, 2),
+                "empirical_metrics": json.dumps(empirical_metrics),
+                "created_at": datetime.utcnow().isoformat(),
+            }
+        )
+
+    return pd.DataFrame(segments)
+
+
 def export_to_dataframes() -> Dict[str, pd.DataFrame]:
     """Generate all synthetic data and return as pandas DataFrames"""
     print("Generating synthetic CRM data...")
@@ -238,10 +402,22 @@ def export_to_dataframes() -> Dict[str, pd.DataFrame]:
     feedback_data = generate_feedback_data(num_reviews=2000)
     feedback_df = pd.DataFrame(feedback_data)
     
+    print("Deriving raw transaction records...")
+    transactions_df = generate_customer_transactions_raw(crm_df, redemption_df)
+    
+    print("Deriving raw feedback verbatims...")
+    feedback_raw_df = generate_customer_feedback_raw(feedback_df)
+    
+    print("Synthesizing baseline segment summaries...")
+    segments_df = generate_customer_segments(crm_df, transactions_df, redemption_df, feedback_df)
+    
     return {
         "crm_data": crm_df,
+        "customer_transactions_raw": transactions_df,
         "redemption_logs": redemption_df,
         "feedback_data": feedback_df,
+        "customer_feedback_raw": feedback_raw_df,
+        "customer_segments": segments_df,
     }
 
 

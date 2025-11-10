@@ -12,7 +12,7 @@ from google.cloud import bigquery
 from google.cloud.exceptions import NotFound
 import pandas as pd
 from typing import Dict, Optional
-from .bigquery_schemas import TABLE_CONFIGS, CRM_TABLE_SCHEMA, REDEMPTION_LOGS_TABLE_SCHEMA, FEEDBACK_TABLE_SCHEMA
+from .bigquery_schemas import TABLE_CONFIGS
 from .synthetic_data_generator import export_to_dataframes
 import os
 
@@ -129,35 +129,50 @@ def load_all_synthetic_data(
     # Load each table
     print("\n=== Loading Data into BigQuery ===")
     
-    table_schemas = {
-        "crm_data": CRM_TABLE_SCHEMA,
-        "redemption_logs": REDEMPTION_LOGS_TABLE_SCHEMA,
-        "feedback_data": FEEDBACK_TABLE_SCHEMA,
-    }
-    
-    for table_name, schema in table_schemas.items():
+    for table_name, config in TABLE_CONFIGS.items():
         if table_name in dataframes:
             df = dataframes[table_name]
-            
-            # Convert date columns to datetime
-            if "visit_date" in df.columns:
-                df["visit_date"] = pd.to_datetime(df["visit_date"])
-            if "redemption_date" in df.columns:
-                df["redemption_date"] = pd.to_datetime(df["redemption_date"])
-            if "feedback_date" in df.columns:
-                df["feedback_date"] = pd.to_datetime(df["feedback_date"])
-            
-            # Create table
-            config = TABLE_CONFIGS[table_name]
+
+            # Normalize datetime columns
+            datetime_columns = {
+                "crm_data": ["visit_date"],
+                "customer_transactions_raw": ["transaction_date"],
+                "redemption_logs": ["redemption_date"],
+                "feedback_data": ["feedback_date"],
+                "customer_feedback_raw": ["feedback_date"],
+                "customer_segments": ["created_at"],
+            }.get(table_name, [])
+
+            for column in datetime_columns:
+                if column in df.columns:
+                    df[column] = pd.to_datetime(df[column])
+
+            # Normalize repeated field columns
+            repeated_columns = {
+                "customer_transactions_raw": ["items"],
+                "feedback_data": ["key_phrases"],
+                "customer_feedback_raw": [],
+                "customer_segments": ["preferred_mechanics", "key_messaging_phrases"],
+            }.get(table_name, [])
+
+            if repeated_columns:
+                df = df.copy()
+                for column in repeated_columns:
+                    if column in df.columns:
+                        df[column] = df[column].apply(
+                            lambda value: value if isinstance(value, list) else ([] if pd.isna(value) else [value])
+                        )
+
+            # Create or update table
             create_table_if_not_exists(
                 client,
                 project_id,
                 dataset_id,
                 table_name,
-                schema,
+                config["schema"],
                 config["description"],
             )
-            
+
             # Load data
             load_dataframe_to_bigquery(
                 client,
