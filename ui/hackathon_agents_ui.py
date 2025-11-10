@@ -21,7 +21,7 @@ MAX_POLL_SECONDS = 180
 
 AGENT_METADATA = {
     "market_trends_analyst": {
-        "title": "Market Trends Analyst",
+        "title": "1. Market Trends Analyst",
         "user_id": DEFAULT_USER_ID,
         "overview_md": """
 ### What does this agent do?
@@ -68,7 +68,7 @@ Input prompt → Data Collection Agent → Research Synthesis Agent → Trend br
         "default_prompt": "What emerging breakfast trends should we watch for Gen Z consumers?",
     },
     "customer_insights": {
-        "title": "Customer Insights",
+        "title": "2. Customer Insights",
         "user_id": DEFAULT_USER_ID,
         "overview_md": """
 ### What does this agent do?
@@ -117,7 +117,7 @@ Input prompt → Behavioral Analysis (parallel) → Sentiment Analysis (parallel
         "default_prompt": "Analyze Gen Z breakfast customer behaviour and sentiment for Q1.",
     },
     "offer_design": {
-        "title": "Offer Design",
+        "title": "4. Offer Design",
         "user_id": DEFAULT_USER_ID,
         "overview_md": """
 ### What does this agent do?
@@ -158,7 +158,7 @@ Simplified Offer Design Agent → Offer ideas → Rationale / Feasibility / Impa
         "default_prompt": "Based on trends and customer insights, propose three prioritized breakfast offers for Gen Z.",
     },
     "marketing_orchestrator": {
-        "title": "Marketing Orchestrator",
+        "title": "5. Marketing Orchestrator",
         "user_id": DEFAULT_USER_ID,
         "overview_md": """
 ### What does this agent do?
@@ -200,7 +200,7 @@ User prompt → Market Trends → Customer Insights → Offer Design → Final o
         "default_prompt": "Develop three innovative offers to increase breakfast traffic among Gen Z customers during Q1 (6am-11am).",
     },
     "competitor_intelligence": {
-        "title": "Competitor Intelligence",
+        "title": "3. Competitor Intelligence",
         "user_id": DEFAULT_USER_ID,
         "overview_md": """
 ### What does this agent do?
@@ -254,7 +254,7 @@ Prompt → Target Identification → Research Orchestrator → Competitor Analys
 }
 
 AGENT_CHOICES = {meta["title"]: key for key, meta in AGENT_METADATA.items()}
-AGENT_TITLES = list(AGENT_CHOICES.keys())
+AGENT_TITLES = sorted(AGENT_CHOICES.keys(), key=lambda title: (int(title.split(".", 1)[0]), title))
 UNCHANGED_POLL_LIMIT = 3
 
 # ---------------------------------------------------------------------------
@@ -753,6 +753,22 @@ def _render_executive_summary(summary: str) -> bool:
     return True
 
 
+def _normalize_summary_text(text: str) -> str:
+    if not text:
+        return text
+
+    normalized = text.replace("\r\n", "\n")
+
+    def _replacer(match: re.Match) -> str:
+        next_char = match.group(1)
+        if next_char in "-*0123456789":
+            return "\n" + next_char
+        return " " + next_char
+
+    normalized = re.sub(r"(?<!\n)\n([^\n])", _replacer, normalized)
+    return normalized.strip()
+
+
 # ---------------------------------------------------------------------------
 # Streamlit UI
 # ---------------------------------------------------------------------------
@@ -769,10 +785,21 @@ if default_agent_key not in AGENT_METADATA:
     default_agent_key = list(AGENT_METADATA.keys())[0]
 
 default_agent_title = AGENT_METADATA[default_agent_key]["title"]
-default_index = AGENT_TITLES.index(default_agent_title)
+
+default_agent_title = AGENT_METADATA[default_agent_key]["title"]
+
+if (
+    "selected_agent_title" not in st.session_state
+    or st.session_state.selected_agent_title not in AGENT_CHOICES
+):
+    st.session_state.selected_agent_title = default_agent_title
 
 st.sidebar.header("Select agent to explore")
-agent_title = st.sidebar.selectbox("Agent", AGENT_TITLES, index=default_index)
+agent_title = st.sidebar.selectbox(
+    "Agent",
+    AGENT_TITLES,
+    key="selected_agent_title",
+)
 agent_key = AGENT_CHOICES[agent_title]
 metadata = AGENT_METADATA[agent_key]
 user_id = metadata.get("user_id", DEFAULT_USER_ID)
@@ -905,6 +932,8 @@ with results_tab:
             or _extract_final_model_text(run_state.get("events", []) or [])
             or _extract_final_model_text(run_state.get("sse_messages", []) or [])
         )
+        if final_summary_text:
+            final_summary_text = _normalize_summary_text(final_summary_text)
 
         if agent_key == "market_trends_analyst":
             if final_summary_text:

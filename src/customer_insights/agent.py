@@ -24,7 +24,7 @@ customer_insights_manager_agent = ParallelAgent(
     sub_agents=[
         behavioral_analysis_agent,
         profile_synthesizer_agent,
-        sentiment_analysis_agent,
+        # sentiment_analysis_agent,
     ],
     description=(
         "An agent that analyzes customer data to uncover behavioral patterns,"
