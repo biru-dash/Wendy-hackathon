@@ -291,12 +291,13 @@ Output: Gen Z breakfast segment profiles with metrics and messaging
 
 1. In ADK Web, select `customer_insights` from the agent dropdown
 2. Run focused queries to understand what this agent does:
-   - **Example 1**: "What are the behavioral patterns of Gen Z customers in our database?"
-   - **Example 2**: "What do customers say about breakfast offerings in their feedback?"
-   - **Example 3**: "Analyze Gen Z customer segments and their breakfast visit patterns during Q1"
+   - **Example 1**: "How do Gen Z app users behave during breakfast in Q1?"
+   - **Example 2**: "What are Gen Z customers saying about breakfast offers this quarter?"
+   - **Example 3**: "Summarize the key breakfast differences between Gen Z and other segments in Q1."
    - **Full Goal Query** (for comparison): "Develop three innovative offers to increase breakfast traffic among Gen Z customers during Q1 (January-March) breakfast hours (6am-11am)"
 3. Observe trace showing Behavioral Analysis and Sentiment Analysis running simultaneously (parallel execution)
 4. Note Profile Synthesizer runs after both complete
+5. If the sentiment agent flags missing Gen Z breakfast feedback, seed the dataset with sample entries where `is_gen_z = TRUE`, `time_period = '2025-Qx'`, and `visit_daypart = 'breakfast'` so qualitative analysis has data to work with.
 5. Compare with Market Trends sequential execution pattern - notice the difference in execution style
 6. Review events to see BigQuery tool calls and data retrieval:
    - Look for `crm_database_tool` calls from Behavioral Analysis

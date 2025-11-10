@@ -110,11 +110,11 @@ Input prompt → Behavioral Analysis (parallel) → Sentiment Analysis (parallel
 4. Adjust instructions to tighten filters (Gen Z age, 6-11am window, Q1 date range) and compare outputs.
 """,
         "example_prompts": [
-            "What are the behavioral patterns of Gen Z app users during breakfast hours?",
-            "Summarize feedback themes from Gen Z customers about breakfast offers.",
-            "Profile Gen Z breakfast segments during Q1 across channels and redemption types.",
+            "How do Gen Z app users behave during breakfast in Q1?",
+            "What are Gen Z customers saying about breakfast offers this quarter?",
+            "Summarize the key breakfast differences between Gen Z and other segments in Q1.",
         ],
-        "default_prompt": "Analyze Gen Z breakfast customer behaviour and sentiment for Q1.",
+        "default_prompt": "How do Gen Z app users behave during breakfast in Q1?",
     },
     "offer_design": {
         "title": "4. Offer Design",
