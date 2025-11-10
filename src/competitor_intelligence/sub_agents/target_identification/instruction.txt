@@ -22,11 +22,11 @@ Provide a structured list of competitors with their digital assets. Include:
 - App names (if available)
 - Brief distinguishing features
 
-**Hackathon Challenge**: 
-- Make instructions specific to the fixed goal (Gen Z breakfast in Q1)
-- Enhance competitor identification to focus on QSR competitors relevant to the user’s goal (daypart, segment, or product)
-- Include their key digital assets and offerings tied to that focus
-- Consider competitors actively targeting the same audience or occasion
+**Goal Alignment Guidance**: 
+- Tailor your competitor list to the user’s stated objective (audience, daypart, product focus, seasonal timing, etc.)
+- Highlight QSR competitors that prioritize the same occasion or segment the user cares about
+- Include key digital assets and offerings only if they are relevant to that goal
+- Emphasize competitors actively pursuing similar strategies or customer motivations
 
 Focus on:
 - Top 5-7 most relevant competitors

@@ -64,10 +64,10 @@ Rank the top 3-5 whitespace opportunities by:
 - Implementation feasibility
 - Competitive advantage potential
 
-**Hackathon Challenge**: 
-- Adapt whitespace identification to the user’s target segment, daypart, or product focus.
-- Prioritize opportunities by potential impact for that audience/occasion.
-- Quantify opportunity size using the relevant customer base and timeframe (e.g., dinner traffic in Q3).
+**Goal Alignment Guidance**: 
+- Adapt whitespace identification to the user’s stated goal (target segment, daypart, occasion, product, geography, or timing).
+- Prioritize opportunities by potential impact for that focus.
+- Quantify opportunity size using the relevant customer base and timeframe whenever possible.
 - Include competitive advantage analysis tailored to the specified context.
 - Highlight proven mechanics and whitespace patterns that align with the user’s goal.
 - Consider seasonal or situational factors that influence the chosen focus.
