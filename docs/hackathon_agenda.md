@@ -184,14 +184,14 @@ ADK Web is the interface you'll use to interact with and test the multi-agent sy
 
 1. **Data Collection Agent**
    - Role: Collects raw data sources
-   - Function: Uses Google Search to find URLs and trend data
-   - Tools: `google_search`
+   - Function: Uses Google Search to find URLs and capture metadata about breakfast trends (qualitative-only until trend tooling is added)
+   - Tools: `google_search` (implemented), `google_trends_api_tool` *(roadmap; not yet implemented)*
    - File: `src/market_trends_analyst/sub_agents/data_collection/instruction.txt`
 
 2. **Research Synthesis Agent**
    - Role: Analyzes collected data
    - Function: Reads URLs, extracts insights, synthesizes trend briefs
-   - Tools: `web_scraper_tool`
+   - Tools: `web_scraper_tool` *(not yet implemented; participants can implement)*
    - File: `src/market_trends_analyst/sub_agents/research_synthesis/instruction.txt`
 
 **Workflow**:
@@ -466,15 +466,16 @@ Return a list of URLs you found.
 **Advanced Instructions (Goal-Specific)**:
 ```
 You are the Data Collection Agent (The "Hunter").
-- Use google_search to find 10-15 relevant URLs from:
-  * News articles about the topic
+- Use google_search to gather 12–15 URLs across:
+  * News/trade publications
   * Blog posts and industry reports
-  * Social media discussions
+  * Social/social-first forums (Reddit, TikTok, X, etc.)
 - Focus on QSR-specific and fast-food industry trends
-- For Gen Z breakfast in Q1: Focus on breakfast trends, Gen Z preferences, 
+- For Gen Z breakfast in Q1: Prioritize breakfast trends, Gen Z preferences,
   Q1 seasonal factors, morning routines, breakfast habits
-- Return structured object with urls and trend_data
-- DO NOT read or analyze content - just collect
+- Log each query you run and capture metadata (title, snippet, publish_date, source_type)
+- Return structured output with `urls[]`, `notes`, and any `issues`
+- DO NOT read or analyze content — just collect high-quality links
 ```
 
 **Benefits of Advanced Instructions**:
@@ -800,8 +801,8 @@ Competitor Intelligence now runs by default in the orchestrator flow. Use this p
 
 **Market Trends Analyst**:
 - `google_search` - Finds URLs about trends
-- `web_scraper_tool` - Reads web page content
-- `google_trends_api_tool` - Gets quantitative trend data
+- `web_scraper_tool` - Reads web page or API content *(not yet implemented; participants can build/extend)*
+- `google_trends_api_tool` - Gets quantitative trend data *(not yet implemented; participants can build/extend)*
 
 **Customer Insights**:
 - `crm_database_tool` - Queries customer transaction data from BigQuery
