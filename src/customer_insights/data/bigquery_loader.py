@@ -152,7 +152,12 @@ def load_all_synthetic_data(
                 "customer_transactions_raw": ["items"],
                 "feedback_data": ["key_phrases"],
                 "customer_feedback_raw": [],
-                "customer_segments": ["preferred_mechanics", "key_messaging_phrases"],
+                "customer_segments": [
+                    "preferred_mechanics",
+                    "key_messaging_phrases",
+                    "top_time_periods",
+                    "dominant_dayparts",
+                ],
             }.get(table_name, [])
 
             if repeated_columns:

@@ -12,6 +12,12 @@ CRM_TABLE_SCHEMA = [
     bigquery.SchemaField("preferred_time", "STRING", mode="NULLABLE"),
     bigquery.SchemaField("total_lifetime_visits", "INTEGER", mode="NULLABLE"),
     bigquery.SchemaField("total_lifetime_spend", "FLOAT", mode="NULLABLE"),
+    bigquery.SchemaField("birth_year", "INTEGER", mode="REQUIRED"),
+    bigquery.SchemaField("age", "INTEGER", mode="REQUIRED"),
+    bigquery.SchemaField("generation", "STRING", mode="REQUIRED"),
+    bigquery.SchemaField("is_gen_z", "BOOLEAN", mode="REQUIRED"),
+    bigquery.SchemaField("time_period", "STRING", mode="REQUIRED"),
+    bigquery.SchemaField("visit_daypart", "STRING", mode="REQUIRED"),
 ]
 
 CUSTOMER_TRANSACTIONS_RAW_SCHEMA = [
@@ -26,6 +32,11 @@ CUSTOMER_TRANSACTIONS_RAW_SCHEMA = [
     bigquery.SchemaField("payment_method", "STRING", mode="NULLABLE"),
     bigquery.SchemaField("items", "STRING", mode="REPEATED"),
     bigquery.SchemaField("visit_daypart", "STRING", mode="NULLABLE"),
+    bigquery.SchemaField("birth_year", "INTEGER", mode="REQUIRED"),
+    bigquery.SchemaField("age", "INTEGER", mode="REQUIRED"),
+    bigquery.SchemaField("generation", "STRING", mode="REQUIRED"),
+    bigquery.SchemaField("is_gen_z", "BOOLEAN", mode="REQUIRED"),
+    bigquery.SchemaField("time_period", "STRING", mode="REQUIRED"),
 ]
 
 REDEMPTION_LOGS_TABLE_SCHEMA = [
@@ -42,6 +53,12 @@ REDEMPTION_LOGS_TABLE_SCHEMA = [
     bigquery.SchemaField("month", "STRING", mode="NULLABLE"),
     bigquery.SchemaField("day_of_week", "STRING", mode="NULLABLE"),
     bigquery.SchemaField("hour", "INTEGER", mode="NULLABLE"),
+    bigquery.SchemaField("time_period", "STRING", mode="REQUIRED"),
+    bigquery.SchemaField("daypart", "STRING", mode="REQUIRED"),
+    bigquery.SchemaField("birth_year", "INTEGER", mode="REQUIRED"),
+    bigquery.SchemaField("age", "INTEGER", mode="REQUIRED"),
+    bigquery.SchemaField("generation", "STRING", mode="REQUIRED"),
+    bigquery.SchemaField("is_gen_z", "BOOLEAN", mode="REQUIRED"),
 ]
 
 FEEDBACK_TABLE_SCHEMA = [
@@ -55,6 +72,12 @@ FEEDBACK_TABLE_SCHEMA = [
     bigquery.SchemaField("key_phrases", "STRING", mode="REPEATED"),  # Array of strings
     bigquery.SchemaField("channel", "STRING", mode="NULLABLE"),
     bigquery.SchemaField("source", "STRING", mode="NULLABLE"),
+    bigquery.SchemaField("time_period", "STRING", mode="REQUIRED"),
+    bigquery.SchemaField("daypart", "STRING", mode="REQUIRED"),
+    bigquery.SchemaField("birth_year", "INTEGER", mode="REQUIRED"),
+    bigquery.SchemaField("age", "INTEGER", mode="REQUIRED"),
+    bigquery.SchemaField("generation", "STRING", mode="REQUIRED"),
+    bigquery.SchemaField("is_gen_z", "BOOLEAN", mode="REQUIRED"),
 ]
 
 CUSTOMER_FEEDBACK_RAW_SCHEMA = [
@@ -66,6 +89,12 @@ CUSTOMER_FEEDBACK_RAW_SCHEMA = [
     bigquery.SchemaField("feedback_text", "STRING", mode="REQUIRED"),
     bigquery.SchemaField("channel", "STRING", mode="NULLABLE"),
     bigquery.SchemaField("source", "STRING", mode="NULLABLE"),
+    bigquery.SchemaField("time_period", "STRING", mode="REQUIRED"),
+    bigquery.SchemaField("daypart", "STRING", mode="REQUIRED"),
+    bigquery.SchemaField("birth_year", "INTEGER", mode="REQUIRED"),
+    bigquery.SchemaField("age", "INTEGER", mode="REQUIRED"),
+    bigquery.SchemaField("generation", "STRING", mode="REQUIRED"),
+    bigquery.SchemaField("is_gen_z", "BOOLEAN", mode="REQUIRED"),
 ]
 
 CUSTOMER_SEGMENTS_SCHEMA = [
@@ -77,6 +106,10 @@ CUSTOMER_SEGMENTS_SCHEMA = [
     bigquery.SchemaField("lift_estimate", "FLOAT", mode="NULLABLE"),
     bigquery.SchemaField("empirical_metrics", "STRING", mode="NULLABLE"),
     bigquery.SchemaField("created_at", "TIMESTAMP", mode="NULLABLE"),
+    bigquery.SchemaField("primary_generation", "STRING", mode="NULLABLE"),
+    bigquery.SchemaField("gen_z_share", "FLOAT", mode="NULLABLE"),
+    bigquery.SchemaField("top_time_periods", "STRING", mode="REPEATED"),
+    bigquery.SchemaField("dominant_dayparts", "STRING", mode="REPEATED"),
 ]
 
 # Table configuration

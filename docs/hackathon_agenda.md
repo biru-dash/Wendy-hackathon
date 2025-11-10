@@ -98,15 +98,6 @@ pip install google-adk google-cloud-aiplatform google-cloud-bigquery
 # This will open a browser window - use your Wendy's email to sign in
 gcloud auth application-default login
 
-# (Optional) Set Google Cloud project for gcloud commands
-# Note: This is optional - your .env file will set the project for the agents
-# If you get a password prompt, you can skip this step
-# gcloud config set project cdp-tst-5fba
-
-# Configure environment variables
-cp .env.example .env
-# Edit .env file with your GCP project details (project ID, project number, dataset name)
-
 # Launch ADK Web Server
 adk web src
 

@@ -3,7 +3,7 @@ graph TB
     
     MO --> Step1[Step 1: Market Trends Analyst]
     Step1 --> Step2[Step 2: Customer Insights]
-    Step2 --> Step3[Step 3: Competitor Intelligence<br/>Optional - Commented Out]
+    Step2 --> Step3[Step 3: Competitor Intelligence]
     Step3 --> Step4[Step 4: Offer Design]
     
     Step1 --> MTA[Market Trends Analyst<br/>SequentialAgent]
@@ -18,7 +18,7 @@ graph TB
     
     Output1 --> OD
     Output2 --> OD
-    Output3 -.-> OD
+    Output3 --> OD
     
     Output4 --> Final[Final Output:<br/>3 Prioritized Offers]
     
@@ -28,5 +28,5 @@ graph TB
     style CompI fill:#e8f5e9,stroke:#1b5e20,stroke-width:2px
     style OD fill:#fce4ec,stroke:#880e4f,stroke-width:2px
     style Final fill:#c8e6c9,stroke:#2e7d32,stroke-width:3px
-    style Step3 stroke-dasharray: 5 5,stroke:#9e9e9e
+    style Step3 stroke:#1b5e20
 
